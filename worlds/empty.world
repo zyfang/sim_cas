@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+  <world name="kitchen_world">
+
+    <physics type="ode">
+      <gravity>0 0 -9.8</gravity>
+        <max_step_size>0.001</max_step_size>
+    </physics>
+
+    <include>
+      <uri>model://sun_vertical</uri>
+    </include>
+
+    <include>
+      <uri>model://kitchen_floor</uri>
+    </include>
+
+  </world>
+</sdf>

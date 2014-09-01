@@ -1,0 +1,6 @@
+*~
+src/hand_sim/
+Logs/
+*.pyc
+scripts/state.log
+build/
