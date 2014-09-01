@@ -70,7 +70,7 @@
 	<!--~HARD bodies cfm=erp=0, kp=kd=1000000000000
 	~SOFT bodies cfm=erp=1 or kp,kd  < 1
 	<inertia> for spheres: (2*m*r^2)/5 -->	
-	<!--plugin name="factory_liquid" filename="libfactory_liquid.so">
+	<plugin name="SpawnLiquid" filename="libSpawnLiquid.so">
 		<init_pos>0.2 0.1 0.88</init_pos>
 		<nr_spheres>72</nr_spheres>
 		<mass>0.0006</mass>
@@ -89,11 +89,11 @@
 		<bounce>0.0</bounce>
 		<inertia>0.00005</inertia>
 		<auto_disable>0</auto_disable>
-	</plugin-->
+	</plugin>
 
 	<!-- dynamically creates joints between the spheres -->
 	<!-- reducing the error reductions parameter (erp) allows joint to exceed the limit -->
-	<!--plugin name='create_pancake_plugin' filename='libcreate_pancake_plugin.so'>
+	<!--plugin name='CreatePancake' filename='libCreatePancake.so'>
 		<stop_cfm>0.001</stop_cfm>
 		<stop_erp>0.0005</stop_erp>
 		<fudge_factor>0.0</fudge_factor>
