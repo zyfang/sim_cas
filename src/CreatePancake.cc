@@ -236,6 +236,14 @@ void CreatePancake::InitCenterAndChildLinks()
 	// input cloud, output center pos
 	pcl::PointXYZ center_pos = CreatePancake::GetCloudCentroid(cloud);
 
+//	for (size_t i = 0; i < indices.size (); ++i)
+//	{
+//		centroid[0] += cloud[indices[i]].x;
+//		centroid[1] += cloud[indices[i]].y;
+//		centroid[2] += cloud[indices[i]].z;
+//	}
+//	centroid /= nr_spheres;
+
 	// get center link index, by computing closest point from the centroid
 	unsigned int center_index = CreatePancake::GetClosestPoint(cloud, center_pos);
 
