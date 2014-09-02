@@ -118,7 +118,7 @@ namespace gazebo
 	    /// \brief Node used for using Gazebo communications.
 	    private: transport::NodePtr gznode;
 
-	    /// \brief Subscribe pointer.
+	    /// \brief Subscribe to hydra topic.
 	    private: transport::SubscriberPtr hydraSub;
 
 		/// \brief thumb and fore finger contact subscribers

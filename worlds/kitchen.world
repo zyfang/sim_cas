@@ -93,7 +93,7 @@
 
 	<!-- dynamically creates joints between the spheres -->
 	<!-- reducing the error reductions parameter (erp) allows joint to exceed the limit -->
-	<!--plugin name='CreatePancake' filename='libCreatePancake.so'>
+	<plugin name='CreatePancake' filename='libCreatePancake.so'>
 		<stop_cfm>0.001</stop_cfm>
 		<stop_erp>0.0005</stop_erp>
 		<fudge_factor>0.0</fudge_factor>
@@ -107,7 +107,7 @@
 		<auto_disable>0</auto_disable>
 		<force_limit>0</force_limit>
 		<distance_limit>0</distance_limit>
-	</plugin-->
+	</plugin>
 
 
 
