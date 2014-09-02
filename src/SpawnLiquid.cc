@@ -211,16 +211,16 @@ namespace gazebo
         else auto_disable = _sdf->Get<bool>("auto_disable");
 
         //print parameters
-		std::printf("**Liquid parameters:"
-				" \n mu: %f"
-				" \n mu2: %f"
-				" \n slip1: %f"
-				" \n slip2: %f"
-				" \n cfm: %f"
-				" \n erp: %f"
-				" \n kp: %f"
-				" \n kd: %f \n",
-				mu, mu2, slip1, slip2, cfm, erp, kp, kd);
+//		std::printf("**Liquid parameters:"
+//				" \n mu: %f"
+//				" \n mu2: %f"
+//				" \n slip1: %f"
+//				" \n slip2: %f"
+//				" \n cfm: %f"
+//				" \n erp: %f"
+//				" \n kp: %f"
+//				" \n kd: %f \n",
+//				mu, mu2, slip1, slip2, cfm, erp, kp, kd);
 
         /////// END SDF PARAMETERS
     	///////////////////////////////////////////////////////////////////////////////////
@@ -330,8 +330,9 @@ namespace gazebo
         sdf::SDF sphereSDF;
         sphereSDF.SetFromString(xml.str());
 
-
         _parent->InsertModelSDF(sphereSDF);
+
+        std::cout << "******** LIQUID SPAWNED *********" << std::endl;
 
     }
 

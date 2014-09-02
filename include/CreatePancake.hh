@@ -47,16 +47,6 @@
 #include <ros/ros.h>
 #include <sstream>
 
-#include <pcl/point_cloud.h>
-#include <pcl/common/centroid.h>
-#include <pcl/conversions.h>
-#include <pcl/filters/voxel_grid.h>
-#include <pcl/kdtree/kdtree_flann.h>
-
-#include <Eigen/Core>
-
-#include <hand_sim_msgs/HydraRaw.h>
-
 
 namespace gazebo
 {
@@ -86,7 +76,7 @@ namespace gazebo
 	    protected: void CheckJointDistanceLimits();
 
 		/// \brief callback for every hydra message
-		private: void HydraCallback(const hand_sim_msgs::HydraRaw &msg);
+		private: void OnHydra(ConstHydraPtr &_msg);
 
 		/// \brief get the SDF plugin parameters
 		private: void GetSDFParameters(const sdf::ElementPtr _sdf);
@@ -94,22 +84,12 @@ namespace gazebo
 		/// \brief initialize center and child links of the spheres
 		private: void InitCenterAndChildLinks();
 
-		/// \brief create a point cloud with the current positions of the spheres
-		private: void InitSphereCloud(pcl::PointCloud<pcl::PointXYZ> &_cloud);
+		/// \brief start creating the joints between the liquid spheres
+		private: void ConnectPancake();
 
 		/// \brief create a joint between the anchor link and the exterior link
 		private: void CreateDynamicJoint(
 				physics::LinkPtr _parent_link, physics::LinkPtr _child_link);
-
-		/// \brief compute the centroid of the point cloud
-		private: pcl::PointXYZ GetCloudCentroid(pcl::PointCloud<pcl::PointXYZ> &_cloud);
-
-		/// \brief get the closest point from the cloud to the centroid
-		private: unsigned int GetClosestPoint(
-				pcl::PointCloud<pcl::PointXYZ> &_cloud, pcl::PointXYZ _pos);
-
-		/// \brief start creating the joints between the liquid spheres
-		private: void ConnectPancake();
 
 		/// \brief detach joint when force or distance limit is breached
 		private: void BreakPancakeJoint(unsigned int i);
@@ -136,17 +116,17 @@ namespace gazebo
 		private: double stopCfm, stopErp, limitStop, pancakeInertia, fudgeFactor, cfm, erp,
 		highStop, lowStop, stiffness, damping, forceLimit, distanceLimit;
 
-		/// \brief the rosnode
-		private: ros::NodeHandle* rosnode;
-
-		/// \brief ros subscriber (either to hydra or to the three gear topic)
-		private: ros::Subscriber rosSubscriber;
-
 		/// \brief sphere counter
 		private: unsigned int childSphereCounter;
 
 	    /// \brief Pointer to the world update event connection
 	    private: event::ConnectionPtr worldConnection;
+
+	    /// \brief Node used for using Gazebo communications.
+	    private: transport::NodePtr gznode;
+
+	    /// \brief Subscribe to hydra topic.
+	    private: transport::SubscriberPtr hydraSub;
 
 	};
 }

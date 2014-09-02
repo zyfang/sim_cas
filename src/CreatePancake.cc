@@ -42,21 +42,11 @@ using namespace gazebo;
 //////////////////////////////////////////////////
 CreatePancake::CreatePancake()
 {
-	// set up rosnode
-	int argc = 0;
-	char** argv = NULL;
-	ros::init(argc,argv,"Create_pancake_plugin");
-	this->rosnode = new ros::NodeHandle();
-
-	// subscribe to hydra ros topic
-	this->rosSubscriber = this->rosnode->subscribe(
-			"/hydra_raw", 10, &CreatePancake::HydraCallback, this);
 }
 
 //////////////////////////////////////////////////
 CreatePancake::~CreatePancake()
 {
-	delete this->rosnode;
 }
 
 //////////////////////////////////////////////////
@@ -67,6 +57,14 @@ void CreatePancake::Load(physics::WorldPtr _parent, sdf::ElementPtr _sdf)
 
 	// set the parameters from the plugin
 	CreatePancake::GetSDFParameters(_sdf);
+
+	// Initialize the transport node
+	this->gznode = transport::NodePtr(new transport::Node());
+	this->gznode->Init(this->world->GetName());
+
+	// Subscribe to hydra topic
+	this->hydraSub = this->gznode->Subscribe("~/hydra",
+			&CreatePancake::OnHydra, this);
 
 	// flags for buttons pressed and created pancake
 	this->jointButtonPressed = false;
@@ -177,42 +175,32 @@ void CreatePancake::CheckJointDistanceLimits()
 }
 
 //////////////////////////////////////////////////
-void CreatePancake::HydraCallback(const hand_sim_msgs::HydraRaw& _msg)
+void CreatePancake::OnHydra(ConstHydraPtr &_msg)
 {
-	// if all the links are connected (the pancake is created) return from callback
-	if (this->pancakeCreated)
-	{
-		// shut down ros subscriber and node
-		this->rosSubscriber.shutdown();
-
-		this->rosnode->shutdown();
-
-		return;
-	}
-
 	// check if button pressed
-	if (_msg.buttons[1] == 1)
+	if (_msg->right().button_bumper())
 	{
 		this->jointButtonPressed = true;
 	}
 
 	// check if button was released
-	if(this->jointButtonPressed && _msg.buttons[1] == 0)
+	if(this->jointButtonPressed && !_msg->right().button_bumper())
 	{
 		// set button state to released
 		this->jointButtonPressed = false;
 
 		// TODO fix this for loading it in Init() or Load() or smth
+		// the liquid is spawned to late to be loaded there?
 		// load the liquid model
 		if(this->liquidModel == NULL)
 		{
 			this->liquidModel = this->world->GetModel("liquid_spheres");
 		}
 
-		// check if center and child links are initialised
+		// check if center and child links are initialized
 		if (!this->centerAndChildLinksInit)
 		{
-			// initalise center and child sphere links
+			// initalize center and child sphere links
 			CreatePancake::InitCenterAndChildLinks();
 
 			// set flag to true
@@ -222,170 +210,63 @@ void CreatePancake::HydraCallback(const hand_sim_msgs::HydraRaw& _msg)
 			CreatePancake::ConnectPancake();
 		}
 	}
+
+	// if all the links are connected (the pancake is created) return from callback
+	if (this->pancakeCreated)
+	{
+		// TODO error at unsubscription
+		// stop listening to hydra topic
+//		this->hydraSub->Unsubscribe();
+
+		return;
+	}
 }
 
 //////////////////////////////////////////////////
 void CreatePancake::InitCenterAndChildLinks()
 {
-	// point cloud that will take the positions of the spheres as values
-	pcl::PointCloud<pcl::PointXYZ> cloud;
+	// centroid of the spheres
+	math::Vector3 centroid;
 
-	// create point cloud with the position of the spheres
-	CreatePancake::InitSphereCloud(cloud);
+	// links of the liquid
+	const physics::Link_V links = this->liquidModel->GetLinks();
 
-	// input cloud, output center pos
-	pcl::PointXYZ center_pos = CreatePancake::GetCloudCentroid(cloud);
-
-//	for (size_t i = 0; i < indices.size (); ++i)
-//	{
-//		centroid[0] += cloud[indices[i]].x;
-//		centroid[1] += cloud[indices[i]].y;
-//		centroid[2] += cloud[indices[i]].z;
-//	}
-//	centroid /= nr_spheres;
-
-	// get center link index, by computing closest point from the centroid
-	unsigned int center_index = CreatePancake::GetClosestPoint(cloud, center_pos);
-
-
-	std::stringstream ss;
-	// set the center link
-	ss << "sphere_link_" << center_index;
-	this->centerLink = this->liquidModel->GetLink(ss.str());
-	ss.str("");
-
-	// set all the child links
-	for (unsigned int i=0; i < cloud.size(); i++)
+	// compute centroid by computing the average of all the sphere pos
+	for(physics::Link_V::const_iterator l_iter = links.begin();
+			l_iter != links.end(); ++l_iter)
 	{
-		if (i != center_index)
+		centroid += l_iter->get()->GetWorldPose().pos;
+	}
+	centroid /= links.size();
+
+	// smallest distance between centroid and sphere, first value
+	double smallest_dist = links.begin()->get()->GetWorldPose().pos.Distance(centroid);
+
+	// get the center sphere by getting the smallest distance between centroid and sphere
+	for(physics::Link_V::const_iterator l_iter = links.begin();
+			l_iter != links.end(); ++l_iter)
+	{
+		double curr_dist = l_iter->get()->GetWorldPose().pos.Distance(centroid);
+
+		// check is distance is smaller
+		if(smallest_dist >= curr_dist)
 		{
-			ss << "sphere_link_" << i;
-			this->childLinks.push_back(this->liquidModel->GetLink(ss.str()));
-			ss.str("");
+			smallest_dist = curr_dist;
+
+			// set center link to the current link
+			this->centerLink = (*l_iter);
 		}
 	}
-}
 
-//////////////////////////////////////////////////
-void CreatePancake::CreateDynamicJoint(
-		physics::LinkPtr _center_link, physics::LinkPtr _ext_link)
-{
-//	std::cout << "Creating joint between parent link: " << _center_link->GetName() <<
-//			" and child link: " << _ext_link->GetName() << std::endl;
-
-	math::Vector3 axis, direction;
-	physics::JointPtr joint;
-
-	// direction is the vector between the two spheres
-	direction = _ext_link->GetWorldPose().pos - _center_link->GetWorldPose().pos;
-	direction.Normalize();
-
-	// the axis is the perpedicular on the direction, so the spheres rotate around the center
-	axis = direction.Cross(math::Vector3(0.0, 0.0, 1.0));
-
-	// create joint
-	joint = this->world->GetPhysicsEngine()->CreateJoint(
-			"revolute", this->liquidModel);
-
-	// Pose is the offset from the child, that is why we leave it to 0
-	// Pose containing Joint Anchor offset from child link.
-	// setting anchor relative to gazebo child link frame position
-	joint->Load(_ext_link, _center_link, math::Pose());
-
-
-    // child and parent links are switched so the joint ends up on the parent
-	joint->Attach(_ext_link, _center_link);
-
-	// set the axis of rotation relative to the local frame
-	joint->SetAxis(0, axis);
-
-	// set limits and other parameters
-	joint->SetHighStop(0, this->highStop);
-	joint->SetLowStop(0, this->lowStop);
-
-//	joint->SetDamping(0, this->damping);
-//	joint->SetStiffness(0, this->stiffness);
-
-
-	// reducing the error reductions parameter allows joint to exceed the limit
-	joint->SetParam("cfm", 0, this->cfm);
-	joint->SetParam("erp", 0, this->erp);
-	joint->SetParam("stop_cfm", 0, this->cfm);
-	joint->SetParam("stop_erp", 0, this->erp);
-
-	// fudge factor is used to scale this excess force.
-	// It should have a value between zero and one (the default value).
-	// If the jumping motion is too visible in a joint, the value can be reduced.
-	// Making this value too small can prevent the motor from being able to move the joint away from a stop.
-//	joint->SetParam("fudge_factor", 0, this->fudgeFactor);
-
-
-	joint->SetProvideFeedback(true);
-
-	this->pancakeJoints.push_back(joint);
-
-}
-
-//////////////////////////////////////////////////
-void CreatePancake::InitSphereCloud(pcl::PointCloud<pcl::PointXYZ> &cloud)
-{
-	std::stringstream ss;
-	unsigned int i = 0;
-	ss << "sphere_link_" << i;
-
-	while (this->liquidModel->GetLink(ss.str()) != NULL)
+	// set all the child links
+	for(physics::Link_V::const_iterator l_iter = links.begin();
+			l_iter != links.end(); ++l_iter)
 	{
-		math::Vector3 pos = this->liquidModel->GetLink(ss.str())->GetWorldPose().pos;
-		cloud.push_back(pcl::PointXYZ(pos.x, pos.y, pos.z));
-		i++;
-		ss.str("");
-		ss << "sphere_link_" << i;
+		if ((*l_iter) != this->centerLink)
+		{
+			this->childLinks.push_back((*l_iter));
+		}
 	}
-}
-
-//////////////////////////////////////////////////
-pcl::PointXYZ CreatePancake::GetCloudCentroid(
-		pcl::PointCloud<pcl::PointXYZ> &cloud)
-{
-	Eigen::Vector4f centroid;
-	pcl::PointXYZ center_pos;
-
-	pcl::compute3DCentroid(cloud, centroid);
-
-	center_pos.x = centroid[0];
-	center_pos.y = centroid[1];
-	center_pos.z = centroid[2];
-
-	return center_pos;
-}
-
-//////////////////////////////////////////////////
-unsigned int CreatePancake::GetClosestPoint(
-		pcl::PointCloud<pcl::PointXYZ> &cloud, pcl::PointXYZ pos)
-{
-	pcl::KdTree<pcl::PointXYZ>::Ptr tree;
-
-	cloud.push_back(pos);
-
-	tree = boost::make_shared<pcl::KdTreeFLANN<pcl::PointXYZ> > ();
-	tree->setInputCloud(cloud.makeShared());
-
-	int k = 2;
-	std::vector<int> k_indices;
-	std::vector<float> k_distances;
-	k_indices.resize(k);
-	k_distances.resize(k);
-
-	//THE CENTER IS THE NEAREST NEIGHBOUR OF THE ADDED POINT, WHICH IS DELETED AFTERWARDS
-	//last point of the cloud (the center)
-	int index = (int)cloud.points.size()-1;
-	tree->nearestKSearch(index, k, k_indices, k_distances);
-
-	cloud.points.pop_back();
-
-	//ROS_INFO("center indice: %u",k_indices[1]);
-
-	return k_indices[1];
 }
 
 //////////////////////////////////////////////////
@@ -442,6 +323,67 @@ void CreatePancake::ConnectPancake()
 	// now it is set back to the given parameters from the sdf file
 	// to allow flipping of the pancake
 
+}
+
+//////////////////////////////////////////////////
+void CreatePancake::CreateDynamicJoint(
+		physics::LinkPtr _center_link, physics::LinkPtr _ext_link)
+{
+//	std::cout << "Creating joint between parent link: " << _center_link->GetName() <<
+//			" and child link: " << _ext_link->GetName() << std::endl;
+
+	math::Vector3 axis, direction;
+	physics::JointPtr joint;
+
+	// direction is the vector between the two spheres
+	direction = _ext_link->GetWorldPose().pos - _center_link->GetWorldPose().pos;
+	direction.Normalize();
+
+	// the axis is the perpedicular on the direction, so the spheres rotate around the center
+	axis = direction.Cross(math::Vector3(0.0, 0.0, 1.0));
+
+	// create joint
+	joint = this->world->GetPhysicsEngine()->CreateJoint(
+			"revolute", this->liquidModel);
+
+	// Pose is the offset from the child, that is why we leave it to 0
+	// Pose containing Joint Anchor offset from child link.
+	// setting anchor relative to gazebo child link frame position
+	joint->Load(_ext_link, _center_link, math::Pose());
+
+    // child and parent links are switched so the joint ends up on the parent
+	joint->Attach(_ext_link, _center_link);
+
+	// set the axis of rotation relative to the local frame
+	joint->SetAxis(0, axis);
+
+	// set limits and other parameters
+	joint->SetHighStop(0, this->highStop);
+	joint->SetLowStop(0, this->lowStop);
+
+//	joint->SetDamping(0, this->damping);
+//	joint->SetStiffness(0, this->stiffness);
+
+
+	// reducing the error reductions parameter allows joint to exceed the limit
+	joint->SetParam("cfm", 0, this->cfm);
+	joint->SetParam("erp", 0, this->erp);
+	joint->SetParam("stop_cfm", 0, this->cfm);
+	joint->SetParam("stop_erp", 0, this->erp);
+
+	// fudge factor is used to scale this excess force.
+	// It should have a value between zero and one (the default value).
+	// If the jumping motion is too visible in a joint, the value can be reduced.
+	// Making this value too small can prevent the motor from being able to move the joint away from a stop.
+//	joint->SetParam("fudge_factor", 0, this->fudgeFactor);
+
+	// in case joints are breakable, provide feedback
+	if ((this->forceLimit > 0) && (this->distanceLimit > 0))
+	{
+		joint->SetProvideFeedback(true);
+
+		this->pancakeJoints.push_back(joint);
+	}
 }
 
 //////////////////////////////////////////////////

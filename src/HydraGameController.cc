@@ -50,15 +50,14 @@ using namespace gazebo;
 GZ_REGISTER_WORLD_PLUGIN(HydraGameController)
 
 //////////////////////////////////////////////////
-HydraGameController::HydraGameController() : offsetPos(0.8, 0, 0.8), offsetQuat(-PI/2,0,-PI/2)
+HydraGameController::HydraGameController() : offsetPos(0.8, 0, 0.8),
+offsetQuat(-PI/2 + 0.3, 0, -PI/2)
 {
-
 }
 
 //////////////////////////////////////////////////
 HydraGameController::~HydraGameController()
 {
-
 }
 
 //////////////////////////////////////////////////
@@ -237,18 +236,16 @@ void HydraGameController::OnHydra(ConstHydraPtr &_msg)
 //////////////////////////////////////////////////
 void HydraGameController::UpdateDesiredPose(ConstHydraPtr &_msg)
 {
-	math::Quaternion q_msg;
-
-	q_msg.Set(- _msg->right().pose().orientation().z(),
-			   _msg->right().pose().orientation().y(),
-			  - _msg->right().pose().orientation().x(),
-			   _msg->right().pose().orientation().w());
+	const math::Quaternion q_msg = math::Quaternion(- _msg->right().pose().orientation().z(),
+												   _msg->right().pose().orientation().y(),
+												  - _msg->right().pose().orientation().x(),
+												   _msg->right().pose().orientation().w());
 
 	this->desiredQuat = q_msg * this->offsetQuat;
 
-	this->desiredPosition.x = _msg->right().pose().position().x() * 2 + this->offsetPos.x;
-	this->desiredPosition.y = _msg->right().pose().position().y() * 2 + this->offsetPos.y;
-	this->desiredPosition.z = _msg->right().pose().position().z() * 2 + this->offsetPos.z;
+	this->desiredPosition.x = _msg->right().pose().position().x() * 2.5 + this->offsetPos.x;
+	this->desiredPosition.y = _msg->right().pose().position().y() * 2.5 + this->offsetPos.y;
+	this->desiredPosition.z = _msg->right().pose().position().z() * 2.5 + this->offsetPos.z;
 
 }
 
@@ -313,10 +310,10 @@ void HydraGameController::SetJointsPostion()
 //////////////////////////////////////////////////
 void HydraGameController::SetJointsPIDs()
 {
-	double const _control_P = 27;
+	double const _control_P = 40;
 	double const _control_I = 0;
 	double const _control_D = 15;
-	double const _finger_P = 2;
+	double const _finger_P = 3;
 	double const _finger_I = 0;
 	double const _finger_D = 0;
 
@@ -382,14 +379,14 @@ void HydraGameController::HandPoseControl(const common::Time _step_time)
 math::Vector3 HydraGameController::ReturnRotVelocity(const math::Quaternion _curr_quat)
 {
     math::Vector3 rot_velocity;
-    math::Quaternion quatern_diff, vel_q;
 
-    quatern_diff = (this->desiredQuat - _curr_quat) * 2.0;
-    vel_q = quatern_diff * _curr_quat.GetInverse();
+    const math::Quaternion quatern_diff = (this->desiredQuat - _curr_quat) * 3.0;
 
-    rot_velocity.x = vel_q.x*6;
-    rot_velocity.y = vel_q.y*6;
-    rot_velocity.z = vel_q.z*6;
+    const math::Quaternion vel_q = quatern_diff * _curr_quat.GetInverse();
+
+    rot_velocity.x = vel_q.x * 8;
+    rot_velocity.y = vel_q.y * 8;
+    rot_velocity.z = vel_q.z * 8;
 
     return rot_velocity;
 }
