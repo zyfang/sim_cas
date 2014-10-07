@@ -39,8 +39,8 @@
 #include <boost/tokenizer.hpp>
 #include <gazebo/gazebo.hh>
 #include <gazebo/physics/physics.hh>
-#include "gazebo/util/LogRecord.hh"
-#include "gazebo/transport/transport.hh"
+#include <gazebo/util/LogRecord.hh>
+#include <gazebo/transport/transport.hh>
 
 #define PI 3.14159265359
 
@@ -67,7 +67,7 @@ void HydraGameController::Load(physics::WorldPtr _parent, sdf::ElementPtr _sdf)
 	this->world = _parent;
 
 	// Get the model to be controlled by hydra
-	this->handModel = this->world->GetModel("hit_hand");
+	this->handModel = this->world->GetModel("Hand");
 
 	// get log record instance
 	this->logRecorder = util::LogRecord::Instance();

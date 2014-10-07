@@ -237,7 +237,7 @@ namespace gazebo
     	//////////////////////////// START XML LIQUID
     	xml << "<?xml version='1.0'?>\n";
     	xml << "<sdf version='1.5'>\n";
-    	xml << "<model name='liquid_spheres'>\n";
+    	xml << "<model name='LiquidTangibleThing'>\n";
     	xml << "\t<static>false</static>\n";
     	xml << "\t<pose>" << init_pos.x << " " << init_pos.y << " " << init_pos.z << " 0 0 0 </pose>\n";
 
