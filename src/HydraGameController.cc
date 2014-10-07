@@ -150,7 +150,8 @@ void HydraGameController::Update(const common::UpdateInfo & /*_info*/)
 void HydraGameController::OnHydra(ConstHydraPtr &_msg)
 {
 	// check pause button status
-	if (_msg->right().button_center())
+//	if (_msg->right().button_center()) // TODO it is called as pressed until the world is loaded??
+	if (_msg->right().button_2())
 	{
 		// button pressed
 		this->pauseButtonPressed = true;

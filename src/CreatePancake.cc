@@ -194,7 +194,7 @@ void CreatePancake::OnHydra(ConstHydraPtr &_msg)
 		// load the liquid model
 		if(this->liquidModel == NULL)
 		{
-			this->liquidModel = this->world->GetModel("liquid_spheres");
+			this->liquidModel = this->world->GetModel("LiquidTangibleThing");
 		}
 
 		// check if center and child links are initialized
