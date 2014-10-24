@@ -1,0 +1,71 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+  <world name="kitchen_world">
+
+    <physics type="ode">
+      <gravity>0 0 -9.8</gravity>
+        <!--max_step_size>0.0016</max_step_size>
+		<real_time_update_rate>625</real_time_update_rate-->
+        <max_step_size>0.001</max_step_size>
+		<real_time_update_rate>1000</real_time_update_rate>
+    </physics>
+
+	<gui>
+	  <camera name="kitchen_camera">
+		<pose>-1 0.1 1.5 0 0.4 0</pose>
+	  </camera>
+	</gui>
+
+	<scene>
+	  <sky>
+	   <clouds>
+		 <speed>12</speed>
+	   </clouds>
+	  </sky>
+	</scene>
+
+    <!--include>
+        <uri>model://oculus</uri>
+        <pose>-0.3 0.1 1.3 0 0.3 0</pose>
+    </include-->
+
+    <include>
+      <uri>model://sun_vertical</uri>
+    </include>
+
+    <include>
+      <uri>model://kitchen_floor</uri>
+    </include>
+
+    <include>
+      <uri>model://kitchen_table</uri>
+    </include>
+
+    <include>
+        <uri>model://pancake_maker</uri>
+        <pose>0.3 0.4 0.89 0 0 0</pose>
+    </include>
+
+    <include>
+      <uri>model://hit_hand</uri>
+      <pose>0 0 1 0 0 0</pose>
+    </include>
+
+    <include>
+        <uri>model://mug</uri>
+        <pose>0.2 0.1 0.855 0.0 0 0</pose>
+    </include>
+
+    <include>
+        <uri>model://spatula</uri>
+        <pose>0.6 0.15 1.0 0 0 0</pose>
+    </include>
+
+    <!-- Load the plugin for publishing Razer Hydra -->
+    <plugin name="hydra" filename="libHydraPlugin.so"></plugin>
+
+    <!-- Load the plugin for controlling the environment with Razer Hydra -->
+    <plugin name="HydraGameController" filename="libHydraGameController.so"></plugin>
+
+  </world>
+</sdf>
