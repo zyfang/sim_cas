@@ -76,6 +76,7 @@ void HydraGameController::Load(physics::WorldPtr _parent, sdf::ElementPtr _sdf)
 	// set logging path directory
 	this->logRecorder->SetBasePath("Logs");
 
+
 	// Initialize the transport node
 	this->gznode = transport::NodePtr(new transport::Node());
 	this->gznode->Init(this->world->GetName());
@@ -84,6 +85,7 @@ void HydraGameController::Load(physics::WorldPtr _parent, sdf::ElementPtr _sdf)
 	this->hydraSub = this->gznode->Subscribe("~/hydra",
 			&HydraGameController::OnHydra, this);
 
+
 	// Subscribe to the given contact topic
 	this->thumbContactSub = this->gznode->Subscribe(
 			"~/thumb_contact", &HydraGameController::OnThumbContact, this);
@@ -91,6 +93,7 @@ void HydraGameController::Load(physics::WorldPtr _parent, sdf::ElementPtr _sdf)
 	// initialize the contact subscriber to the given topic, and callback OnContact
 	this->foreContactSub = this->gznode->Subscribe(
 			"~/fore_finger_contact", &HydraGameController::OnForeFingerContact, this);
+
 
 	// Listen to the update event. This event is broadcast every
 	// simulation iteration.
@@ -129,7 +132,7 @@ void HydraGameController::Load(physics::WorldPtr _parent, sdf::ElementPtr _sdf)
 	// set the initial value of the rotation
 	this->desiredQuat.Set(0.0, 0.0, 0.0, 1.0);
 
-	std::cout << "******** HYDRA CONTROLLER LOADED *********" << std::endl;
+	std::cout << "******** HYDRA GAME CONTROLLER LOADED *********" << std::endl;
 }
 
 /////////////////////////////////////////////////
@@ -149,9 +152,9 @@ void HydraGameController::Update(const common::UpdateInfo & /*_info*/)
 /////////////////////////////////////////////////
 void HydraGameController::OnHydra(ConstHydraPtr &_msg)
 {
+	std::cout << "HYdra msg received" << std::endl;
 	// check pause button status
-//	if (_msg->right().button_center()) // TODO it is called as pressed until the world is loaded??
-	if (_msg->right().button_2())
+	if (_msg->right().button_center())
 	{
 		// button pressed
 		this->pauseButtonPressed = true;

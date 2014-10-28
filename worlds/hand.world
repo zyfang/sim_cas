@@ -61,9 +61,6 @@
         <pose>0.6 0.15 1.0 0 0 0</pose>
     </include>
 
-    <!-- Load the plugin for publishing Razer Hydra -->
-    <plugin name="hydra" filename="libHydraPlugin.so"></plugin>
-
     <!-- Load the plugin for controlling the environment with Razer Hydra -->
     <plugin name="HydraGameController" filename="libHydraGameController.so"></plugin>
 
