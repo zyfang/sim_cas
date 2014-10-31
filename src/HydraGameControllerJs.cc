@@ -34,7 +34,7 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
 
-#include "HydraGameController.hh"
+#include "HydraGameControllerJs.hh"
 #include <boost/bind.hpp>
 #include <boost/tokenizer.hpp>
 #include <gazebo/gazebo.hh>
@@ -47,21 +47,22 @@
 using namespace gazebo;
 
 // Register this plugin with the simulator
-GZ_REGISTER_WORLD_PLUGIN(HydraGameController)
+GZ_REGISTER_WORLD_PLUGIN(HydraGameControllerJs)
 
 //////////////////////////////////////////////////
-HydraGameController::HydraGameController() : offsetPos(0.8, 0, 0.8),
-offsetQuat(-PI/2 + 0.3, 0, -PI/2)
+HydraGameControllerJs::HydraGameControllerJs() : offsetPos(0.8, 0, 0.8),
+offsetQuat(0,0,0)
+//offsetQuat(-PI/2 + 0.3, 0, -PI/2)
 {
 }
 
 //////////////////////////////////////////////////
-HydraGameController::~HydraGameController()
+HydraGameControllerJs::~HydraGameControllerJs()
 {
 }
 
 //////////////////////////////////////////////////
-void HydraGameController::Load(physics::WorldPtr _parent, sdf::ElementPtr _sdf)
+void HydraGameControllerJs::Load(physics::WorldPtr _parent, sdf::ElementPtr _sdf)
 {
 	// Get the world name.
 	this->world = _parent;
@@ -83,22 +84,22 @@ void HydraGameController::Load(physics::WorldPtr _parent, sdf::ElementPtr _sdf)
 
 	// Subscribe to hydra topic
 	this->hydraSub = this->gznode->Subscribe("~/hydra",
-			&HydraGameController::OnHydra, this);
+			&HydraGameControllerJs::OnHydra, this);
 
 
 	// Subscribe to the given contact topic
 	this->thumbContactSub = this->gznode->Subscribe(
-			"~/thumb_contact", &HydraGameController::OnThumbContact, this);
+			"~/thumb_contact", &HydraGameControllerJs::OnThumbContact, this);
 
 	// initialize the contact subscriber to the given topic, and callback OnContact
 	this->foreContactSub = this->gznode->Subscribe(
-			"~/fore_finger_contact", &HydraGameController::OnForeFingerContact, this);
+			"~/fore_finger_contact", &HydraGameControllerJs::OnForeFingerContact, this);
 
 
 	// Listen to the update event. This event is broadcast every
 	// simulation iteration.
 	this->updateConnection = event::Events::ConnectWorldUpdateBegin(
-			boost::bind(&HydraGameController::Update, this, _1));
+			boost::bind(&HydraGameControllerJs::Update, this, _1));
 
 	// set the hand to be paused, and the status of the button
 	this->pauseHand = true;
@@ -118,13 +119,13 @@ void HydraGameController::Load(physics::WorldPtr _parent, sdf::ElementPtr _sdf)
 	this->handModel->SetGravityMode(false);
 
     // Set hand joints
-	HydraGameController::SetHandJoints();
+	HydraGameControllerJs::SetHandJoints();
 
     // Set hand joints positions
-	HydraGameController::SetJointsPostion();
+	HydraGameControllerJs::SetJointsPostion();
 
     // Set up control and finger joint PIDs
-	HydraGameController::SetJointsPIDs();
+	HydraGameControllerJs::SetJointsPIDs();
 
 	// set desired position the current hand position (the spawned position)
 	this->desiredPosition = this->handModel->GetWorldPose().pos;
@@ -132,25 +133,25 @@ void HydraGameController::Load(physics::WorldPtr _parent, sdf::ElementPtr _sdf)
 	// set the initial value of the rotation
 	this->desiredQuat.Set(0.0, 0.0, 0.0, 1.0);
 
-	std::cout << "******** HYDRA GAME CONTROLLER LOADED *********" << std::endl;
+	std::cout << "******** HYDRA GAME CONTROLLER LOADED JS*********" << std::endl;
 }
 
 /////////////////////////////////////////////////
-void HydraGameController::Update(const common::UpdateInfo & /*_info*/)
+void HydraGameControllerJs::Update(const common::UpdateInfo & /*_info*/)
 {
 	// compute step time
 	common::Time step_time = this->world->GetSimTime() - this->prevSimTime;
 	this->prevSimTime = this->world->GetSimTime();
 
 	// brief apply forces in order to control the hand Pose
-	HydraGameController::HandPoseControl(step_time);
+	HydraGameControllerJs::HandPoseControl(step_time);
 
 	// brief apply forces in order to control the finger positions
-	HydraGameController::FingersControl(step_time);
+	HydraGameControllerJs::FingersControl(step_time);
 }
 
 /////////////////////////////////////////////////
-void HydraGameController::OnHydra(ConstHydraPtr &_msg)
+void HydraGameControllerJs::OnHydra(ConstHydraPtr &_msg)
 {
 	// check pause button status
 	if (_msg->right().button_center())
@@ -172,7 +173,7 @@ void HydraGameController::OnHydra(ConstHydraPtr &_msg)
 		return;
 
 	// update the desired pose of the hand
-	HydraGameController::UpdateDesiredPose(_msg);
+	HydraGameControllerJs::UpdateDesiredPose(_msg);
 
 	// open / close gripper depending on the received gestures
 	if(_msg->right().joy_x() != 0)
@@ -184,13 +185,13 @@ void HydraGameController::OnHydra(ConstHydraPtr &_msg)
 		{
 			// Close gripper
 			this->closingGripper = true;
-			HydraGameController::CloseGripper();
+			HydraGameControllerJs::CloseGripper();
 		}
 		else if (_msg->right().joy_x() < 0)
 		{
 			// Open gripper
 			this->closingGripper = false;
-			HydraGameController::OpenGripper();
+			HydraGameControllerJs::OpenGripper();
 		}
 	}
 	else
@@ -237,7 +238,7 @@ void HydraGameController::OnHydra(ConstHydraPtr &_msg)
 }
 
 //////////////////////////////////////////////////
-void HydraGameController::UpdateDesiredPose(ConstHydraPtr &_msg)
+void HydraGameControllerJs::UpdateDesiredPose(ConstHydraPtr &_msg)
 {
 	const math::Quaternion q_msg = math::Quaternion(- _msg->right().pose().orientation().z(),
 												   _msg->right().pose().orientation().y(),
@@ -253,7 +254,7 @@ void HydraGameController::UpdateDesiredPose(ConstHydraPtr &_msg)
 }
 
 //////////////////////////////////////////////////
-void HydraGameController::SetHandJoints()
+void HydraGameControllerJs::SetHandJoints()
 {
     // set up thumb joints
 	// thumb origin joint
@@ -284,7 +285,7 @@ void HydraGameController::SetHandJoints()
 }
 
 //////////////////////////////////////////////////
-void HydraGameController::SetJointsPostion()
+void HydraGameControllerJs::SetJointsPostion()
 {
     //set up the joints initial position
     this->thumbJointsPos.push_back(1.57); //thumb            lower="0"              upper="1.570796"
@@ -311,7 +312,7 @@ void HydraGameController::SetJointsPostion()
 }
 
 //////////////////////////////////////////////////
-void HydraGameController::SetJointsPIDs()
+void HydraGameControllerJs::SetJointsPIDs()
 {
 	double const _control_P = 40;
 	double const _control_I = 0;
@@ -356,7 +357,7 @@ void HydraGameController::SetJointsPIDs()
 }
 
 //////////////////////////////////////////////////
-void HydraGameController::HandPoseControl(const common::Time _step_time)
+void HydraGameControllerJs::HandPoseControl(const common::Time _step_time)
 {
 	// get current pose of the hand
 	const math::Pose curr_pose = this->handModel->GetWorldPose();
@@ -371,7 +372,7 @@ void HydraGameController::HandPoseControl(const common::Time _step_time)
 	pid_lin_velocity.z = this->controlPIDs[2].Update(curr_pose.pos.z - this->desiredPosition.z, _step_time);
 
 	// compute rotation velocity values from the current quaternion
-	rot_velocity = HydraGameController::ReturnRotVelocity(curr_pose.rot);
+	rot_velocity = HydraGameControllerJs::ReturnRotVelocity(curr_pose.rot);
 
 	// apply the computed lin/rot forces/velocities to the model
 	this->handModel->GetLink("palm_link")->SetForce(pid_lin_velocity);
@@ -379,7 +380,7 @@ void HydraGameController::HandPoseControl(const common::Time _step_time)
 }
 
 //////////////////////////////////////////////////
-math::Vector3 HydraGameController::ReturnRotVelocity(const math::Quaternion _curr_quat)
+math::Vector3 HydraGameControllerJs::ReturnRotVelocity(const math::Quaternion _curr_quat)
 {
     math::Vector3 rot_velocity;
 
@@ -397,7 +398,7 @@ math::Vector3 HydraGameController::ReturnRotVelocity(const math::Quaternion _cur
 //TODO check for limits, or do it similarly to like pr2 gripper,
 // apply force directly and the limit will stop it
 //////////////////////////////////////////////////
-void HydraGameController::FingersControl(const common::Time _step_time)
+void HydraGameControllerJs::FingersControl(const common::Time _step_time)
 {
 	double _error, _effort;
 
@@ -453,7 +454,7 @@ void HydraGameController::FingersControl(const common::Time _step_time)
 }
 
 //////////////////////////////////////////////////
-void HydraGameController::OpenGripper()
+void HydraGameControllerJs::OpenGripper()
 {
 	if (this->thumbJointsPos[2] > 0)
 	{
@@ -473,12 +474,12 @@ void HydraGameController::OpenGripper()
 
 	if(this->jointAttached)
 	{
-		HydraGameController::DetachJoint();
+		HydraGameControllerJs::DetachJoint();
 	}
 }
 
 //////////////////////////////////////////////////
-void HydraGameController::CloseGripper()
+void HydraGameControllerJs::CloseGripper()
 {
 	if (this->thumbJointsPos[2] < 1)
 	{
@@ -498,7 +499,7 @@ void HydraGameController::CloseGripper()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////
-void HydraGameController::OnThumbContact(ConstContactsPtr &_msg)
+void HydraGameControllerJs::OnThumbContact(ConstContactsPtr &_msg)
 {
 	// if gripper is not closing/opening
 	if (this->idleGripper)
@@ -519,12 +520,12 @@ void HydraGameController::OnThumbContact(ConstContactsPtr &_msg)
 		physics::LinkPtr attachLink = attachModel->GetLink(*beg);
 		//std::cout << "attach Link: " << attachLink->GetName().c_str() << std::endl;
 
-		HydraGameController::AttachJoint(attachLink);
+		HydraGameControllerJs::AttachJoint(attachLink);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////
-void HydraGameController::OnForeFingerContact(ConstContactsPtr &_msg)
+void HydraGameControllerJs::OnForeFingerContact(ConstContactsPtr &_msg)
 {
 	if(_msg->contact_size()>0)
 	{
@@ -537,7 +538,7 @@ void HydraGameController::OnForeFingerContact(ConstContactsPtr &_msg)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////
-void HydraGameController::AttachJoint(const physics::LinkPtr attachLink)
+void HydraGameControllerJs::AttachJoint(const physics::LinkPtr attachLink)
 {
 	physics::LinkPtr palm_link = this->handModel->GetLink("palm_link");
 
@@ -554,7 +555,7 @@ void HydraGameController::AttachJoint(const physics::LinkPtr attachLink)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////
-void HydraGameController::DetachJoint()
+void HydraGameControllerJs::DetachJoint()
 {
 	std::cout << "Detaching Fixed Joint! " <<  std::endl;
 
