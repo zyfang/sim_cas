@@ -51,7 +51,8 @@ GZ_REGISTER_WORLD_PLUGIN(HydraGameControllerJs)
 
 //////////////////////////////////////////////////
 HydraGameControllerJs::HydraGameControllerJs() : offsetPos(0.8, 0, 0.8),
-offsetQuat(0,0,0)
+offsetQuat(PI/2, 0, PI/2)
+//offsetPos(0.8, 0, 0.8),
 //offsetQuat(-PI/2 + 0.3, 0, -PI/2)
 {
 }
@@ -240,10 +241,14 @@ void HydraGameControllerJs::OnHydra(ConstHydraPtr &_msg)
 //////////////////////////////////////////////////
 void HydraGameControllerJs::UpdateDesiredPose(ConstHydraPtr &_msg)
 {
-	const math::Quaternion q_msg = math::Quaternion(- _msg->right().pose().orientation().z(),
-												   _msg->right().pose().orientation().y(),
-												  - _msg->right().pose().orientation().x(),
-												   _msg->right().pose().orientation().w());
+	const math::Quaternion q_msg = math::Quaternion(_msg->right().pose().orientation().w(),
+							- _msg->right().pose().orientation().z(),
+							- _msg->right().pose().orientation().x(),
+							_msg->right().pose().orientation().y());
+// 	const math::Quaternion q_msg = math::Quaternion(- _msg->right().pose().orientation().z(),
+// 							  _msg->right().pose().orientation().y(),
+// 							- _msg->right().pose().orientation().x(),
+// 							  _msg->right().pose().orientation().w());
 
 	this->desiredQuat = q_msg * this->offsetQuat;
 
