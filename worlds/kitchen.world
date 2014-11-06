@@ -61,17 +61,21 @@
         <pose>0.6 0.15 1.0 0 0 0</pose>
     </include>
 
+	<!-- Plugin for loading models -->
+	<plugin name="ArrangeModels" filename="libArrangeModels.so"></plugin>
+
 	<!-- Load the plugin for publishing Razer Hydra -->
 	<plugin name="hydra" filename="libHydraPlugin.so"></plugin>
 
-
-	<!-- Plugins: -->
+	<!-- Load the plugin for controlling the environment with Razer Hydra -->
+	<plugin name="HydraGameController" filename="libHydraGameController.so"></plugin>
 
 	<!--~HARD bodies cfm=erp=0, kp=kd=1000000000000
 	~SOFT bodies cfm=erp=1 or kp,kd  < 1
 	<inertia> for spheres: (2*m*r^2)/5 -->	
 	<plugin name="SpawnLiquid" filename="libSpawnLiquid.so">
 		<init_pos>0.2 0.1 0.88</init_pos>
+		<inObject>Cup</inObject>
 		<nr_spheres>72</nr_spheres>
 		<mass>0.0006</mass>
 		<radius>0.0045</radius>		
@@ -109,12 +113,6 @@
 		<distance_limit>0</distance_limit>
 	</plugin>
 
-
-	<!-- Load the plugin for controlling the environment with Razer Hydra -->
-	<plugin name="HydraGameController" filename="libHydraGameController.so"></plugin>
-
-	<!-- Plugin for loading models -->
-	<plugin name="ArrangeModels" filename="libArrangeModels.so"></plugin>
 
   </world>
 </sdf>

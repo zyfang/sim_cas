@@ -53,7 +53,7 @@ namespace gazebo
   	}
     public: void Load(physics::WorldPtr _parent, sdf::ElementPtr _sdf)
     {
-    	sdf::Vector3 p3, init_pos;
+    	math::Vector3 p3, init_pos;
     	std::stringstream xml;
     	int spawned, level;
     	unsigned int nr_spheres;
@@ -72,15 +72,26 @@ namespace gazebo
         }
         else nr_spheres = _sdf->Get<unsigned int>("nr_spheres");
 
-    	////////////// Set up the initial position parameter
-        if (!_sdf->HasElement("init_pos"))
+    	////////////// Set up the initial position on the given object
+        if (!_sdf->HasElement("inObject"))
         {
-      	  std::cout << "Missing parameter <init_pos> in SpawnLiquid, default to 0 0 0" << std::endl;
-      	  init_pos.x = 0.0;
-      	  init_pos.y = 0.0;
-      	  init_pos.z = 0.0;
+        	std::cout << "Missing parameter <inObject> using init_pos to position" << std::endl;
+
+        	////////////// Set up the initial position parameter
+            if (!_sdf->HasElement("init_pos"))
+            {
+          	  std::cout << "Missing parameter <init_pos> in SpawnLiquid, default to 0 0 0" << std::endl;
+          	  init_pos.x = 0.0;
+          	  init_pos.y = 0.0;
+          	  init_pos.z = 0.0;
+            }
+            else init_pos = _sdf->Get<math::Vector3>("init_pos");
         }
-        else init_pos = _sdf->Get<sdf::Vector3>("init_pos");
+        else
+        {
+        	init_pos = _parent->GetModel(_sdf->Get<std::string>("inObject"))->GetWorldPose().pos;
+        	init_pos.z += 0.02; // adding offset on the Z axis
+        }
 
     	////////////// Set up liquid sphere mass
     	if (!_sdf->HasElement("mass"))
@@ -336,9 +347,9 @@ namespace gazebo
 
     }
 
-    public: sdf::Vector3 part_position(int i, double radius, int& spawned, int& level)
+    public: math::Vector3 part_position(int i, double radius, int& spawned, int& level)
     {
-		sdf::Vector3 v3;
+		math::Vector3 v3;
 		int ii, index_c, c_crt, max_c_in_c;
 		double size, R;
 		ii = i - spawned;
