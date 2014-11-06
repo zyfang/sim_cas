@@ -110,10 +110,11 @@
 	</plugin>
 
 
-
-
 	<!-- Load the plugin for controlling the environment with Razer Hydra -->
 	<plugin name="HydraGameController" filename="libHydraGameController.so"></plugin>
+
+	<!-- Plugin for loading models -->
+	<plugin name="ArrangeModels" filename="libArrangeModels.so"></plugin>
 
   </world>
 </sdf>

@@ -1,5 +1,9 @@
 # hand_sim client
 
+# prerequisites
+ * gazebo
+ * libconfig
+
 # build
 ~~~
 mkdir build
