@@ -10,6 +10,8 @@ add_library(CreatePancake SHARED CreatePancake.cc)
 
 add_library(ArrangeModels SHARED ArrangeModels.cc)
 
+add_library(VisPlugin SHARED VisPlugin.cc)
+
 
 
 target_link_libraries(HydraGameController ${GAZEBO_libraries})
@@ -21,3 +23,5 @@ target_link_libraries(SpawnLiquid ${GAZEBO_libraries})
 target_link_libraries(CreatePancake ${GAZEBO_libraries})
 
 target_link_libraries(ArrangeModels ${GAZEBO_libraries} config++)
+
+target_link_libraries(VisPlugin ${GAZEBO_libraries})

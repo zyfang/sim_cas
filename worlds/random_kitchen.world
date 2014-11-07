@@ -61,6 +61,9 @@
         <pose>0.6 0.15 1.0 0 0 0</pose>
     </include>
 
+	<!-- Plugin for loading models -->
+	<plugin name="ArrangeModels" filename="libArrangeModels.so"></plugin>
+
 	<!-- Load the plugin for publishing Razer Hydra -->
 	<plugin name="hydra" filename="libHydraPlugin.so"></plugin>
 
@@ -110,8 +113,9 @@
 		<distance_limit>0</distance_limit>
 	</plugin>
 
+
 	<!-- Visual Plugin with dummy model -->
-	<!--model name ='dummy_vis_model'>
+	<model name ='dummy_vis_model'>
 		<link name ='dummy_vis_link'>
 		  <visual name ='dummy_vis'>
 			<plugin name='VisPlugin' filename='libVisPlugin.so'/>
@@ -121,7 +125,7 @@
 			<transparency>1</transparency>
 		  </visual>
 		</link>
-	  </model-->
+	  </model>
 
   </world>
 </sdf>
