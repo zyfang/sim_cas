@@ -137,7 +137,7 @@ void ArrangeModels::Load(physics::WorldPtr _world, sdf::ElementPtr _sdf)
 		// bool to check if the random position is fine
 		bool pos_ok = false;
 
-		std::cout << "Placing  " << r_model->GetName() <<std::endl;
+//		std::cout << "Placing  " << r_model->GetName() <<std::endl;
 
 		// try placing the current model until no collisions are detected
 		while(!pos_ok)
@@ -155,19 +155,19 @@ void ArrangeModels::Load(physics::WorldPtr _world, sdf::ElementPtr _sdf)
 						get_rand((parent_bb.min.y + y_offset), (parent_bb.max.y - y_offset)),
 						parent_bb.max.z + z_offset);
 
-				std::cout << "\t Generating a random position " << rand_pos << std::endl;
+//				std::cout << "\t Generating a random position " << rand_pos << std::endl;
 
 
 				// check for collisions with the restricted area
 				for (int i = 0; i < restricted_bbs.size(); i++)
 				{
-					std::cout << "\t\t Checking coll with restricted area " << i << std::endl;
+//					std::cout << "\t\t Checking coll with restricted area " << i << " BB: " << restricted_bbs[i] << std::endl;
 
 					// if the two bb are colliding then try another random
 					if(ArrangeModels::DoBBIntersect(
 							rand_pos.x, rand_pos.y, r_model_bb.GetXLength(), r_model_bb.GetYLength(), restricted_bbs[i]))
 					{
-						std::cout << "\t\t Coll detected with restricted area " << i << std::endl;
+//						std::cout << "\t\t Coll detected with restricted area " << i << " BB: " << restricted_bbs[i] <<std::endl;
 						coll = true;
 						goto check_random_pos;
 					}
@@ -176,13 +176,13 @@ void ArrangeModels::Load(physics::WorldPtr _world, sdf::ElementPtr _sdf)
 				// check for collisions with the already arranged models:
 				for (int i = 0; i < arranged_models.size(); i++)
 				{
-					std::cout << "\t\t Checking coll with " << arranged_models[i]->GetName() << std::endl;
+//					std::cout << "\t\t Checking coll with " << arranged_models[i]->GetName() << std::endl;
 
 					// if the two bb are colliding then try another random
 					if(ArrangeModels::DoBBIntersect(
 							rand_pos.x, rand_pos.y, r_model_bb.GetXLength(), r_model_bb.GetYLength(), arranged_models[i]->GetBoundingBox()))
 					{
-						std::cout << "\t\t Coll detected with " << arranged_models[i]->GetName() << std::endl;
+//						std::cout << "\t\t Coll detected with " << arranged_models[i]->GetName() << std::endl;
 						coll = true;
 						goto check_random_pos;
 					}
@@ -191,7 +191,7 @@ void ArrangeModels::Load(physics::WorldPtr _world, sdf::ElementPtr _sdf)
 				// if there was no collision the position is fine
 				if (!coll)
 				{
-					std::cout << "\t Random position is fine " << std::endl;
+//					std::cout << "\t Random position is fine " << std::endl;
 					pos_ok = true;
 				}
 		}
@@ -210,14 +210,17 @@ void ArrangeModels::Load(physics::WorldPtr _world, sdf::ElementPtr _sdf)
 		// add model to the arranged ones
 		arranged_models.push_back(r_model);
 	}
-
 }
 
 //////////////////////////////////////////////////
 bool ArrangeModels::DoBBIntersect(double _pos_x, double _pos_y, double _length_x, double _length_y, math::Box _bb2)
 {
-	return std::abs(_pos_x - _bb2.GetCenter().x) * 2 < (_length_x + _bb2.GetXLength()) &&
+ 	return std::abs(_pos_x - _bb2.GetCenter().x) * 2 < (_length_x + _bb2.GetXLength()) &&
 			std::abs(_pos_y - _bb2.GetCenter().y) * 2 < (_length_y + _bb2.GetYLength())  ;
+
+ 	// Until the get center pull request gets accepted
+// 	return std::abs(_pos_x - (_bb2.min.x + (_bb2.max.x - _bb2.min.x) / 2)) * 2 < (_length_x + _bb2.GetXLength()) &&
+//			std::abs(_pos_y - (_bb2.min.y + (_bb2.max.y - _bb2.min.y) / 2)) * 2 < (_length_y + _bb2.GetYLength());
 }
 
 

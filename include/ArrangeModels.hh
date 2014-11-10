@@ -58,6 +58,7 @@ class ArrangeModels : public WorldPlugin
 
 	/// \brief Check if the two bb collide
 	private: bool DoBBIntersect(double _pos_x, double _pos_y, double _length_x, double _length_y, math::Box _bb2);
+
 };
 }
 
