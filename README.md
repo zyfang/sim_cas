@@ -12,6 +12,12 @@ cmake ..
 make
 ~~~
 
+# set up plugin path
+~~~
+echo "export GAZEBO_PLUGIN_PATH=/<path>/hand_sim_client/build:${GAZEBO_PLUGIN_PATH}" >> ~/.bashrc
+source ~/.bashrc
+~~~
+
 # run example
 ~~~
 gazebo worlds/kitchen.world -u --verbose
