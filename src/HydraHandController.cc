@@ -109,21 +109,29 @@ void HydraHandController::Load(physics::WorldPtr _parent, sdf::ElementPtr _sdf)
 	// init pause button state flag
 	this->pauseButtonPressed = false;
 
+	// initialize gripper state flags
+	this->idleGripper = true;
+	this->jointAttached = false;
+	this->closingGripper = false;
+	this->foreFingerInContact = false;
+
 	// set up the PID values
-	double const _control_P = 40;
+	double const _control_P = 100;
 	double const _control_I = 0;
-	double const _control_D = 15;
+	double const _control_D = 25;
 
 	// add pid controllers for pos
-	this->controlPIDs.push_back(common::PID(_control_P, _control_I, _control_D, 50, -50));
-	this->controlPIDs.push_back(common::PID(_control_P, _control_I, _control_D, 50, -50));
-	this->controlPIDs.push_back(common::PID(_control_P, _control_I, _control_D, 50, -50));
+	this->controlPIDs.push_back(common::PID(_control_P, _control_I, _control_D, 1000, -1000));
+	this->controlPIDs.push_back(common::PID(_control_P, _control_I, _control_D, 1000, -1000));
+	this->controlPIDs.push_back(common::PID(_control_P, _control_I, _control_D, 1000, -1000));
 
 	// add pid controllers for rot
-	this->rotPIDs.push_back(common::PID(_control_P, _control_I, _control_D, 50, -50));
-	this->rotPIDs.push_back(common::PID(_control_P, _control_I, _control_D, 50, -50));
-	this->rotPIDs.push_back(common::PID(_control_P, _control_I, _control_D, 50, -50));
+	this->rotPIDs.push_back(common::PID(_control_P, _control_I, _control_D, 1000, -1000));
+	this->rotPIDs.push_back(common::PID(_control_P, _control_I, _control_D, 1000, -1000));
+	this->rotPIDs.push_back(common::PID(_control_P, _control_I, _control_D, 1000, -1000));
 
+	// set the initial finger positions
+	HydraHandController::InitFingerPos();
 
 	std::cout << "******** HYDRA HAND CONTROLLER LOADED *********" << std::endl;
 }
@@ -137,20 +145,6 @@ void HydraHandController::OnUpdate()
 
 	// brief apply forces in order to control the hand Pose
 	HydraHandController::HandPoseControl(step_time);
-
-//
-//	std::map<std::string, physics::JointPtr> joints_M = this->jointController->GetJoints();
-//
-//	std::cout << joints_M.size() << std::endl;
-//
-//	for(std::map<std::string, physics::JointPtr>::const_iterator joint_iter = joints_M.begin();
-//			joint_iter != joints_M.end(); ++joint_iter)
-//	{
-//		std::cout << joint_iter->first << joint_iter->second->GetName() << std::endl;
-//	}
-//
-//	this->jointController->SetJointPosition("Hand::thumb_middle_joint",1.57);
-
 }
 
 /////////////////////////////////////////////////
@@ -177,19 +171,49 @@ void HydraHandController::OnHydra(ConstHydraPtr &_msg)
 		return;
 
 	// update the desired pose of the hand
-	HydraHandController::UpdateDesiredPose(_msg);
+	HydraHandController::UpdateHandPose(_msg);
+
+	// brief control fingers
+	HydraHandController::FingersControl(_msg->right().joy_x(), _msg->right().joy_y());
 }
 
 //////////////////////////////////////////////////////////////////////////////////////
 void HydraHandController::OnThumbContact(ConstContactsPtr &_msg)
 {
+	// if gripper is not closing/opening
+	if (this->idleGripper)
+	{
+		return;
+	}
+	// if the thumb is in contact, the gripper is closing and no joint is attached then attach the joint
+	else if (this->closingGripper && _msg->contact_size() > 0 && !this->jointAttached && this->foreFingerInContact)
+	{
+		boost::char_separator<char> sep("::");
 
+		boost::tokenizer< boost::char_separator<char> > tok(_msg->contact(0).collision1(), sep);
+		boost::tokenizer< boost::char_separator<char> >::iterator beg=tok.begin();
+
+		physics::ModelPtr attachModel = this->world->GetModel(*beg);
+		//std::cout << "attach Model: " << attachModel->GetName().c_str() << std::endl;
+		beg++;
+		physics::LinkPtr attachLink = attachModel->GetLink(*beg);
+		//std::cout << "attach Link: " << attachLink->GetName().c_str() << std::endl;
+
+		HydraHandController::AttachJoint(attachLink);
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////
 void HydraHandController::OnForeFingerContact(ConstContactsPtr &_msg)
 {
-
+	if(_msg->contact_size()>0)
+	{
+		this->foreFingerInContact = true;
+	}
+	else
+	{
+		this->foreFingerInContact = false;
+	}
 }
 
 //////////////////////////////////////////////////
@@ -216,6 +240,82 @@ void HydraHandController::HandPoseControl(const common::Time _step_time)
 }
 
 //////////////////////////////////////////////////
+void HydraHandController::InitFingerPos()
+{
+	// Limits example
+	// thumb            lower="0"              upper="1.570796"
+	// thumb base       lower="-0.261799388"   upper="0.261799388"
+	// thumb proximal   lower="-0.087266463"   upper="1.134464014"
+	// thumb middle     lower="0.087266463"    upper="1.134464014"
+	// thumb distal     lower="0.087266463"    upper="1.134464014"
+
+	this->jointController->SetPositionTarget("Hand::thumb_joint", 1.57);
+
+	this->jointController->SetPositionTarget("Hand::thumb_base_joint", 0);
+	this->jointController->SetPositionTarget("Hand::thumb_proximal_joint", 0.1);
+	this->jointController->SetPositionTarget("Hand::thumb_middle_joint", 0.1);
+	this->jointController->SetPositionTarget("Hand::thumb_distal_joint", 0.1);
+
+	this->jointController->SetPositionTarget("Hand::fore_finger_base_joint", 0);
+	this->jointController->SetPositionTarget("Hand::fore_finger_proximal_joint", 0.1);
+	this->jointController->SetPositionTarget("Hand::fore_finger_middle_joint", 0.1);
+	this->jointController->SetPositionTarget("Hand::fore_finger_distal_joint", 0.1);
+
+	this->jointController->SetPositionTarget("Hand::middle_finger_base_joint", 0);
+	this->jointController->SetPositionTarget("Hand::middle_finger_proximal_joint", 0.1);
+	this->jointController->SetPositionTarget("Hand::middle_finger_middle_joint", 0.1);
+	this->jointController->SetPositionTarget("Hand::middle_finger_distal_joint", 0.1);
+
+	this->jointController->SetPositionTarget("Hand::ring_finger_base_joint", 0);
+	this->jointController->SetPositionTarget("Hand::ring_finger_proximal_joint", 0.1);
+	this->jointController->SetPositionTarget("Hand::ring_finger_middle_joint", 0.1);
+	this->jointController->SetPositionTarget("Hand::ring_finger_distal_joint", 0.1);
+}
+
+//////////////////////////////////////////////////
+void HydraHandController::FingersControl(const double _joy_x, const double _joy_y)
+{
+	// opposite thumb movement
+	if (_joy_y != 0)
+	{
+		// current target pos
+		const double curr_pos = this->jointController->GetPositions()["Hand::thumb_joint"];
+
+		const double target_pos = curr_pos - (_joy_y / 500);
+
+		// move thumb if it's between the limits
+		if (target_pos < 1.57 && target_pos > 0.01)
+		{
+			this->jointController->SetPositionTarget("Hand::thumb_joint", target_pos);
+		}
+	}
+
+//	if (_joy_x != 0)
+//	{
+//		std::map<std::string, physics::JointPtr> joints_M = this->jointController->GetJoints();
+//
+//		std::cout << joints_M.size() << std::endl;
+//
+//		for(std::map<std::string, physics::JointPtr>::const_iterator joint_iter = joints_M.begin();
+//				joint_iter != joints_M.end(); ++joint_iter)
+//		{
+//			std::cout << joint_iter->first << joint_iter->second->GetName() << std::endl;
+//		}
+//
+//	}
+
+	//		std::map<std::string, double> positions_M = this->jointController->GetPositions();
+	//
+	//		std::cout << positions_M.size() << std::endl;
+	//
+	//		for(std::map<std::string, double>::const_iterator joint_iter = positions_M.begin();
+	//				joint_iter != positions_M.end(); ++joint_iter)
+	//		{
+	//			std::cout << joint_iter->first << joint_iter->second << std::endl;
+	//		}
+}
+
+//////////////////////////////////////////////////
 math::Vector3 HydraHandController::ReturnRotVelocity(const math::Quaternion _curr_quat)
 {
     math::Vector3 rot_velocity;
@@ -232,7 +332,7 @@ math::Vector3 HydraHandController::ReturnRotVelocity(const math::Quaternion _cur
 }
 
 //////////////////////////////////////////////////
-void HydraHandController::UpdateDesiredPose(ConstHydraPtr &_msg)
+void HydraHandController::UpdateHandPose(ConstHydraPtr &_msg)
 {
 	// set the desired orientation from the received msg
 	const math::Quaternion q_msg = math::Quaternion(
@@ -248,5 +348,40 @@ void HydraHandController::UpdateDesiredPose(ConstHydraPtr &_msg)
 	this->desiredPosition.x = _msg->right().pose().position().x() * 2.5 + this->offsetPos.x;
 	this->desiredPosition.y = _msg->right().pose().position().y() * 2.5 + this->offsetPos.y;
 	this->desiredPosition.z = _msg->right().pose().position().z() * 2.5 + this->offsetPos.z;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////
+void HydraHandController::AttachJoint(const physics::LinkPtr attachLink)
+{
+	const physics::LinkPtr palm_link = this->handModel->GetLink("palm_link");
+
+	std::cout << "Creating joint between " << palm_link->GetName().c_str()
+			<< " and " << attachLink->GetName().c_str() << std::endl;
+
+	// creating joint
+	this->fixedJoint = this->world->GetPhysicsEngine()->CreateJoint("revolute", this->handModel);
+
+	// attaching and setting the joint to fixed
+	this->fixedJoint->Load(palm_link, attachLink, math::Pose());
+    this->fixedJoint->Init();
+    this->fixedJoint->SetHighStop(0, 0);
+    this->fixedJoint->SetLowStop(0, 0);
+
+    // set attached flag to true
+	this->jointAttached = true;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////
+void HydraHandController::DetachJoint()
+{
+	std::cout << "Detaching Fixed Joint! " <<  std::endl;
+
+	// removing and detaching joint
+	this->fixedJoint->Reset();
+	this->fixedJoint->Detach();
+	this->fixedJoint->Fini();
+
+	// set attached flag to false
+	this->jointAttached = false;
 }
 

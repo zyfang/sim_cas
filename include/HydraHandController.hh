@@ -76,11 +76,23 @@ namespace gazebo
 		/// \brief apply forces in order to control the hand Pose
 		private: void HandPoseControl(const common::Time _step_time);
 
+	    /// \brief Set the initial finger positions
+	    private: void InitFingerPos();
+
+		/// \brief Control the hand fingers
+		private: void FingersControl(const double _joy_x, const double _joy_y);
+
 		/// \brief Update the desired pose of the robot hand
-		private: void UpdateDesiredPose(ConstHydraPtr& _msg);
+		private: void UpdateHandPose(ConstHydraPtr& _msg);
 
 		/// \brief Return the required rotational velocity
 		private: math::Vector3 ReturnRotVelocity(const math::Quaternion _curr_quat);
+
+		/// \brief attach joint with the palm link
+		private: void AttachJoint(const physics::LinkPtr);
+
+		/// \brief detach joint from the palm link
+		private: void DetachJoint();
 
 	    /// \brief Pointer to the update event connection
 	    private: event::ConnectionPtr updateConnection;
@@ -106,6 +118,12 @@ namespace gazebo
 	    /// \brief Model pointer
 	    private: physics::ModelPtr handModel;
 
+		/// \brief Hand joints controller
+		private: physics::JointControllerPtr jointController;
+
+		/// \brief Joint pointer used to grasp objects
+		private: physics::JointPtr fixedJoint;
+
 		/// \brief Positional offset for the hand
 		private: const math::Vector3 offsetPos;
 
@@ -124,6 +142,17 @@ namespace gazebo
 		/// \brief Hand pause button state
 		private: bool pauseButtonPressed;
 
+		/// \brief State flag
+		private: bool jointAttached;
+
+		/// \brief State flag
+		private: bool closingGripper;
+
+		/// \brief State flag
+		private: bool idleGripper;
+
+		/// \brief State flag
+		private: bool foreFingerInContact;
 
 		/// \brief Desired position of the hand
 		private: math::Vector3 desiredPosition;
@@ -134,9 +163,12 @@ namespace gazebo
 		/// \brief Timestamp of the last cycle for the PID
 		private: common::Time prevSimTime;
 
+		/// \brief Map of the hand joints and their initial positon
 
-		/// \brief TODO joint controller
-		private: physics::JointControllerPtr jointController;
+		// TODO
+
+
+
 	};
 }
 #endif
