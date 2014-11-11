@@ -329,8 +329,8 @@ void CreatePancake::ConnectPancake()
 void CreatePancake::CreateDynamicJoint(
 		physics::LinkPtr _center_link, physics::LinkPtr _ext_link)
 {
-//	std::cout << "Creating joint between parent link: " << _center_link->GetName() <<
-//			" and child link: " << _ext_link->GetName() << std::endl;
+	std::cout << "Creating joint between parent link: " << _center_link->GetName() <<
+			" and child link: " << _ext_link->GetName() << std::endl;
 
 	math::Vector3 axis, direction;
 	physics::JointPtr joint;
@@ -364,12 +364,12 @@ void CreatePancake::CreateDynamicJoint(
 //	joint->SetDamping(0, this->damping);
 //	joint->SetStiffness(0, this->stiffness);
 
-
+	// TODO deprecated since 4.0.2 ? check how to set them
 	// reducing the error reductions parameter allows joint to exceed the limit
-	joint->SetParam("cfm", 0, this->cfm);
-	joint->SetParam("erp", 0, this->erp);
-	joint->SetParam("stop_cfm", 0, this->cfm);
-	joint->SetParam("stop_erp", 0, this->erp);
+//	joint->SetParam("cfm", 0, this->cfm);
+//	joint->SetParam("erp", 0, this->erp);
+//	joint->SetParam("stop_cfm", 0, this->cfm);
+//	joint->SetParam("stop_erp", 0, this->erp);
 
 	// fudge factor is used to scale this excess force.
 	// It should have a value between zero and one (the default value).
@@ -377,11 +377,13 @@ void CreatePancake::CreateDynamicJoint(
 	// Making this value too small can prevent the motor from being able to move the joint away from a stop.
 //	joint->SetParam("fudge_factor", 0, this->fudgeFactor);
 
+
 	// in case joints are breakable, provide feedback
 	if ((this->forceLimit > 0) && (this->distanceLimit > 0))
 	{
 		joint->SetProvideFeedback(true);
 
+		// add breakable joint to the vector
 		this->pancakeJoints.push_back(joint);
 	}
 }

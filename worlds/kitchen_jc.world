@@ -1,0 +1,127 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+  <world name="kitchen_world">
+
+    <physics type="ode">
+      <gravity>0 0 -9.8</gravity>
+        <!--max_step_size>0.0016</max_step_size>
+		<real_time_update_rate>625</real_time_update_rate-->
+        <max_step_size>0.001</max_step_size>
+		<real_time_update_rate>1000</real_time_update_rate>
+    </physics>
+
+	<gui>
+	  <camera name="kitchen_camera">
+		<pose>-1 0.1 1.5 0 0.4 0</pose>
+	  </camera>
+	</gui>
+
+	<scene>
+	  <sky>
+	   <clouds>
+		 <speed>12</speed>
+	   </clouds>
+	  </sky>
+	</scene>
+
+    <!--include>
+        <uri>model://oculus</uri>
+        <pose>-0.3 0.1 1.3 0 0.3 0</pose>
+    </include-->
+
+    <include>
+      <uri>model://sun_vertical</uri>
+    </include>
+
+    <include>
+      <uri>model://kitchen_floor</uri>
+    </include>
+
+    <include>
+      <uri>model://kitchen_table</uri>
+    </include>
+
+    <include>
+        <uri>model://pancake_maker</uri>
+        <pose>0.3 0.4 0.89 0 0 0</pose>
+    </include>
+
+    <include>
+      <uri>model://hit_hand</uri>
+      <pose>0 0 1 0 0 0</pose>
+    </include>
+
+    <include>
+        <uri>model://mug</uri>
+        <pose>0.2 0.1 0.855 0.0 0 0</pose>
+    </include>
+
+    <include>
+        <uri>model://spatula</uri>
+        <pose>0.6 0.15 1.0 0 0 0</pose>
+    </include>
+
+	<!-- Load the plugin for publishing Razer Hydra -->
+	<plugin name="hydra" filename="libHydraPlugin.so"></plugin>
+
+	<!-- Load the plugin for controlling the environment with Razer Hydra -->
+	<plugin name="HydraHandController" filename="libHydraHandController.so"></plugin>
+
+	<!--~HARD bodies cfm=erp=0, kp=kd=1000000000000
+	~SOFT bodies cfm=erp=1 or kp,kd  < 1
+	<inertia> for spheres: (2*m*r^2)/5 -->	
+	<plugin name="SpawnLiquid" filename="libSpawnLiquid.so">
+		<init_pos>0.2 0.1 0.88</init_pos>
+		<inObject>Cup</inObject>
+		<nr_spheres>72</nr_spheres>
+		<mass>0.0006</mass>
+		<radius>0.0045</radius>		
+		<friction>1</friction>			
+		<friction2>1</friction2>
+		<roll_friction>1</roll_friction>
+		<mu>1.0</mu>			
+		<mu2>1.0</mu2>
+		<slip1>1</slip1>			
+		<slip2>1</slip2>
+		<cfm>1.0</cfm>			
+		<erp>0.00000002</erp>
+		<kp>100000000.8</kp>			
+		<kd>1.2</kd>
+		<bounce>0.0</bounce>
+		<inertia>0.00005</inertia>
+		<auto_disable>0</auto_disable>
+	</plugin>
+
+	<!-- dynamically creates joints between the spheres -->
+	<!-- reducing the error reductions parameter (erp) allows joint to exceed the limit -->
+	<plugin name='CreatePancake' filename='libCreatePancake.so'>
+		<stop_cfm>0.001</stop_cfm>
+		<stop_erp>0.0005</stop_erp>
+		<fudge_factor>0.0</fudge_factor>
+		<cfm>1.0</cfm>
+		<erp>0.005</erp>
+		<highStop>0.02</highStop>
+		<lowStop>-0.02</lowStop>
+		<pancake_inertia>0.000000013</pancake_inertia>
+		<damping>0.001</damping>
+		<stiffness>0.001</stiffness>
+		<auto_disable>0</auto_disable>
+		<force_limit>0</force_limit>
+		<distance_limit>0</distance_limit>
+	</plugin>
+
+	<!-- Visual Plugin with dummy model -->
+	<!--model name ='dummy_vis_model'>
+		<link name ='dummy_vis_link'>
+		  <visual name ='dummy_vis'>
+			<plugin name='VisPlugin' filename='libVisPlugin.so'/>
+		    <geometry>
+		      <sphere><radius>0.5</radius></sphere>
+		    </geometry>
+			<transparency>1</transparency>
+		  </visual>
+		</link>
+	  </model-->
+
+  </world>
+</sdf>

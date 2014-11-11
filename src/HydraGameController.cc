@@ -412,8 +412,8 @@ void HydraGameController::FingersControl(const common::Time _step_time)
 
 		// apply effort on the joint
 		this->thumbFingerJoints[i]->SetForce(0, _effort);
-
 	}
+
 
 	for (unsigned int i=0; i < this->foreFingerJoints.size(); i++)
 	{
@@ -480,6 +480,7 @@ void HydraGameController::OpenGripper()
 //////////////////////////////////////////////////
 void HydraGameController::CloseGripper()
 {
+
 	if (this->thumbJointsPos[2] < 1)
 	{
 		const double _step = 0.0005;

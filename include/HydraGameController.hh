@@ -146,7 +146,7 @@ namespace gazebo
 		private: std::vector<common::PID> rotPIDs, controlPIDs, thumbJointPIDs, foreJointPIDs, middleJointPIDs, ringJointPIDs;
 
 		/// \brief vector of the hand joints
-		private: std::vector<physics::JointPtr> thumbFingerJoints, foreFingerJoints, middleFingerJoints, ringFingerJoints;
+		private: physics::Joint_V thumbFingerJoints, foreFingerJoints, middleFingerJoints, ringFingerJoints;
 
 		/// \brief vector of the hand joints positions
 		private: std::vector<double> thumbJointsPos, foreJointsPos, middleJointsPos, ringJointsPos;
@@ -168,6 +168,7 @@ namespace gazebo
 
 		/// \brief Flags for start/stop logging the simulation
 		private: bool logBtnPressed, logOn;
+
 	};
 }
 #endif

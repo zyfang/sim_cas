@@ -78,9 +78,11 @@ void ArrangeModels::Load(physics::WorldPtr _world, sdf::ElementPtr _sdf)
 	// read config file
 	cfg.readFile("arrange_models.cfg");
 
+	// get the parent
+	std::string st_parent = cfg.lookup("on_top.parent");
 
 	// get the parent model
-	physics::ModelPtr parent_model = _world->GetModel(cfg.lookup("on_top.parent").c_str());
+	physics::ModelPtr parent_model = _world->GetModel(st_parent);
 
 	// get the boundingbox of the parent
 	math::Box parent_bb = parent_model->GetBoundingBox();
@@ -92,8 +94,11 @@ void ArrangeModels::Load(physics::WorldPtr _world, sdf::ElementPtr _sdf)
 	// add the static models to the arranged models
 	for(int i = 0; i < static_names.getLength(); ++i)
 	{
+		// get the static names
+		std::string st_name = static_names[i];
+
 		// add static models to the arranged models
-		arranged_models.push_back(_world->GetModel(static_names[i].c_str()));
+		arranged_models.push_back(_world->GetModel(st_name));
 	}
 
 
@@ -124,7 +129,7 @@ void ArrangeModels::Load(physics::WorldPtr _world, sdf::ElementPtr _sdf)
 		math::Vector3 rand_pos;
 
 		// get the parent model
-		physics::ModelPtr r_model = _world->GetModel(random_names[i].c_str());
+		physics::ModelPtr r_model = _world->GetModel(random_names[i]);
 
 		// get the current model bb
 		math::Box r_model_bb = r_model->GetBoundingBox();
