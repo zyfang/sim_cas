@@ -73,11 +73,17 @@ namespace gazebo
 		/// \brief Callback fore finger contact sensor
 		private: void OnForeFingerContact(ConstContactsPtr &_msg);
 
-	    /// \brief World pointer
-	    private: physics::WorldPtr world;
+		/// \brief apply forces in order to control the hand Pose
+		private: void HandPoseControl(const common::Time _step_time);
 
-	    /// \brief Model pointer
-	    private: physics::ModelPtr handModel;
+		/// \brief Update the desired pose of the robot hand
+		private: void UpdateDesiredPose(ConstHydraPtr& _msg);
+
+		/// \brief Return the required rotational velocity
+		private: math::Vector3 ReturnRotVelocity(const math::Quaternion _curr_quat);
+
+	    /// \brief Pointer to the update event connection
+	    private: event::ConnectionPtr updateConnection;
 
 	    /// \brief Node used for using Gazebo communications.
 	    private: transport::NodePtr gznode;
@@ -85,14 +91,49 @@ namespace gazebo
 	    /// \brief Subscribe to hydra topic.
 	    private: transport::SubscriberPtr hydraSub;
 
-		/// \brief thumb and fore finger contact subscribers
-		private: transport::SubscriberPtr thumbContactSub, foreContactSub;
+		/// \brief thumb contact sensor subscribers
+		private: transport::SubscriberPtr thumbContactSub;
 
-	    /// \brief Pointer to the update event connection
-	    private: event::ConnectionPtr updateConnection;
+		/// \brief fore finger contact sensor subscribers
+		private: transport::SubscriberPtr foreContactSub;
 
 	    /// \brief Store the last message from hydra.
 	    private: boost::shared_ptr<const gazebo::msgs::Hydra> hydraMsgPtr;
+
+		/// \brief World pointer
+	    private: physics::WorldPtr world;
+
+	    /// \brief Model pointer
+	    private: physics::ModelPtr handModel;
+
+		/// \brief Positional offset for the hand
+		private: const math::Vector3 offsetPos;
+
+		/// \brief Orientation offset for the hand
+		private: const math::Quaternion offsetQuat;
+
+		/// \brief Hand joint rotation PID controllers
+		private: std::vector<common::PID> rotPIDs;
+
+		/// \brief Hand joint position PID controllers
+		private: std::vector<common::PID> controlPIDs;
+
+		/// \brief Hand movement state flag
+		private: bool pauseHand;
+
+		/// \brief Hand pause button state
+		private: bool pauseButtonPressed;
+
+
+		/// \brief Desired position of the hand
+		private: math::Vector3 desiredPosition;
+
+		/// \brief Desired orientation of the hand
+		private: math::Quaternion desiredQuat;
+
+		/// \brief Timestamp of the last cycle for the PID
+		private: common::Time prevSimTime;
+
 
 		/// \brief TODO joint controller
 		private: physics::JointControllerPtr jointController;
