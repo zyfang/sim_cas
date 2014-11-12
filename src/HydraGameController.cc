@@ -480,7 +480,6 @@ void HydraGameController::OpenGripper()
 //////////////////////////////////////////////////
 void HydraGameController::CloseGripper()
 {
-
 	if (this->thumbJointsPos[2] < 1)
 	{
 		const double _step = 0.0005;

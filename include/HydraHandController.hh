@@ -67,26 +67,32 @@ namespace gazebo
 	    /// \param[in] _msg The hydra message.
 	    private: void OnHydra(ConstHydraPtr &_msg);
 
-		/// \brief Callback thumb contact sensor
-		private: void OnThumbContact(ConstContactsPtr &_msg);
-
-		/// \brief Callback fore finger contact sensor
-		private: void OnForeFingerContact(ConstContactsPtr &_msg);
-
 		/// \brief apply forces in order to control the hand Pose
 		private: void HandPoseControl(const common::Time _step_time);
 
 	    /// \brief Set the initial finger positions
 	    private: void InitFingerPos();
 
+	    /// \brief Freeze finger positions
+	    private: void FreezeFingerPos();
+
 		/// \brief Control the hand fingers
 		private: void FingersControl(const double _joy_x, const double _joy_y);
+
+		/// \brief Toggle between logging the world or not
+		private: void ToggleLogging(const bool _btn);
 
 		/// \brief Update the desired pose of the robot hand
 		private: void UpdateHandPose(ConstHydraPtr& _msg);
 
 		/// \brief Return the required rotational velocity
 		private: math::Vector3 ReturnRotVelocity(const math::Quaternion _curr_quat);
+
+		/// \brief Callback thumb contact sensor
+		private: void OnThumbContact(ConstContactsPtr &_msg);
+
+		/// \brief Callback fore finger contact sensor
+		private: void OnForeFingerContact(ConstContactsPtr &_msg);
 
 		/// \brief attach joint with the palm link
 		private: void AttachJoint(const physics::LinkPtr);
@@ -137,10 +143,10 @@ namespace gazebo
 		private: std::vector<common::PID> controlPIDs;
 
 		/// \brief Hand movement state flag
-		private: bool pauseHand;
+		private: bool disableHydra;
 
-		/// \brief Hand pause button state
-		private: bool pauseButtonPressed;
+		/// \brief Hand disable button state
+		private: bool disableBtnPressed;
 
 		/// \brief State flag
 		private: bool jointAttached;
@@ -151,8 +157,14 @@ namespace gazebo
 		/// \brief State flag
 		private: bool idleGripper;
 
-		/// \brief State flag
+		/// \brief Fore finger collision sensor status
 		private: bool foreFingerInContact;
+
+		/// \brief Flags for start/stop logging the simulation
+		private: bool loggingOn;
+
+		/// \brief Log world button state
+		private: bool logBtnPressed;
 
 		/// \brief Desired position of the hand
 		private: math::Vector3 desiredPosition;
@@ -162,12 +174,6 @@ namespace gazebo
 
 		/// \brief Timestamp of the last cycle for the PID
 		private: common::Time prevSimTime;
-
-		/// \brief Map of the hand joints and their initial positon
-
-		// TODO
-
-
 
 	};
 }
