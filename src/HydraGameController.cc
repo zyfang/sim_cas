@@ -51,8 +51,8 @@ GZ_REGISTER_WORLD_PLUGIN(HydraGameController)
 
 //////////////////////////////////////////////////
 HydraGameController::HydraGameController() : offsetPos(0.8, 0, 0.8),
-offsetQuat(-PI/2 + 0.3, 0, -PI/2)
-//offsetQuat(PI/2, 0, - PI/2) javascript offset
+//offsetQuat(-PI/2 + 0.3, 0, -PI/2)
+offsetQuat(PI/2, 0, - PI/2) //javascript offset
 {
 }
 

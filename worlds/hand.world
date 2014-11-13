@@ -62,7 +62,7 @@
     </include>
 
     <!-- Load the plugin for controlling the environment with Razer Hydra -->
-    <plugin name="HydraGameControllerJs" filename="libHydraGameControllerJs.so"></plugin>
+    <plugin name="HydraGameController" filename="libHydraGameController.so"></plugin>
 
   </world>
 </sdf>
