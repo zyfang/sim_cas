@@ -61,46 +61,37 @@ namespace gazebo
 
 	    /// \brief Update the controller
 	    /// \param[in] _info Update information provided by the server.
-	    private: void Update(const common::UpdateInfo &_info);
+	    private: void OnUpdate();
 
 	    /// \brief Callback executed every time a new hydra message is received.
 	    /// \param[in] _msg The hydra message.
 	    private: void OnHydra(ConstHydraPtr &_msg);
 
+		/// \brief apply forces in order to control the hand Pose
+		private: void HandPoseControl(const common::Time _step_time);
+
+	    /// \brief Set the initial finger positions
+	    private: void InitFingerPos();
+
+	    /// \brief Freeze finger positions
+	    private: void FreezeFingerPos();
+
+		/// \brief Control the hand fingers
+		private: void FingersControl(const double _joy_x, const double _joy_y);
+
+		/// \brief Toggle between logging the world or not
+		private: void ToggleLogging(const bool _btn);
+
 		/// \brief Update the desired pose of the robot hand
-		private: void UpdateDesiredPose(ConstHydraPtr& _msg);
+		private: void UpdateHandPose(ConstHydraPtr& _msg);
 
 		/// \brief Return the required rotational velocity
 		private: math::Vector3 ReturnRotVelocity(const math::Quaternion _curr_quat);
 
-		/// \brief add finger joints
-		private: void SetHandJoints();
-
-		/// \brief add finger joints positions
-		private: void SetJointsPostion();
-
-		/// \brief add finger joints
-		private: void SetJointsPIDs();
-
-		/// \brief apply forces in order to control the hand Pose
-		private: void HandPoseControl(const common::Time _step_time);
-
-		/// \brief apply forces in order to control the finger positions
-		private: void FingersControl(const common::Time _step_time);
-
-		/// \brief open hand as a gripper
-		private: void OpenGripper();
-
-		/// \brief close hand as a gripper
-		private: void CloseGripper();
-
-		/// \brief get the SDF plugin parameters
-		private: void GetSDFParameters(const sdf::ElementPtr _sdf);
-
-		/// \brief check thumb contact
+		/// \brief Callback thumb contact sensor
 		private: void OnThumbContact(ConstContactsPtr &_msg);
 
-		/// \brief check thumb contact
+		/// \brief Callback fore finger contact sensor
 		private: void OnForeFingerContact(ConstContactsPtr &_msg);
 
 		/// \brief attach joint with the palm link
@@ -109,11 +100,8 @@ namespace gazebo
 		/// \brief detach joint from the palm link
 		private: void DetachJoint();
 
-	    /// \brief World pointer
-	    private: physics::WorldPtr world;
-
-	    /// \brief Model pointer
-	    private: physics::ModelPtr handModel;
+	    /// \brief Pointer to the update event connection
+	    private: event::ConnectionPtr updateConnection;
 
 	    /// \brief Node used for using Gazebo communications.
 	    private: transport::NodePtr gznode;
@@ -121,17 +109,26 @@ namespace gazebo
 	    /// \brief Subscribe to hydra topic.
 	    private: transport::SubscriberPtr hydraSub;
 
-		/// \brief thumb and fore finger contact subscribers
-		private: transport::SubscriberPtr thumbContactSub, foreContactSub;
+		/// \brief thumb contact sensor subscribers
+		private: transport::SubscriberPtr thumbContactSub;
 
-	    /// \brief Pointer to the update event connection
-	    private: event::ConnectionPtr updateConnection;
+		/// \brief fore finger contact sensor subscribers
+		private: transport::SubscriberPtr foreContactSub;
 
-		/// \brief Timestamp of the last cycle for the PID
-		private: common::Time prevSimTime;
+	    /// \brief Store the last message from hydra.
+	    private: boost::shared_ptr<const gazebo::msgs::Hydra> hydraMsgPtr;
 
-		/// \brief Desired position of the hand
-		private: math::Vector3 desiredPosition;
+		/// \brief World pointer
+	    private: physics::WorldPtr world;
+
+	    /// \brief Model pointer
+	    private: physics::ModelPtr handModel;
+
+		/// \brief Hand joints controller
+		private: physics::JointControllerPtr jointController;
+
+		/// \brief Joint pointer used to grasp objects
+		private: physics::JointPtr fixedJoint;
 
 		/// \brief Positional offset for the hand
 		private: const math::Vector3 offsetPos;
@@ -139,35 +136,44 @@ namespace gazebo
 		/// \brief Orientation offset for the hand
 		private: const math::Quaternion offsetQuat;
 
-		/// \brief orientations
-		private: math::Quaternion currQuat, desiredQuat;
+		/// \brief Hand joint rotation PID controllers
+		private: std::vector<common::PID> rotPIDs;
 
-		/// \brief hand joint PID controllers
-		private: std::vector<common::PID> rotPIDs, controlPIDs, thumbJointPIDs, foreJointPIDs, middleJointPIDs, ringJointPIDs;
+		/// \brief Hand joint position PID controllers
+		private: std::vector<common::PID> controlPIDs;
 
-		/// \brief vector of the hand joints
-		private: physics::Joint_V thumbFingerJoints, foreFingerJoints, middleFingerJoints, ringFingerJoints;
+		/// \brief Hand movement state flag
+		private: bool disableHydra;
 
-		/// \brief vector of the hand joints positions
-		private: std::vector<double> thumbJointsPos, foreJointsPos, middleJointsPos, ringJointsPos;
+		/// \brief Hand disable button state
+		private: bool disableBtnPressed;
 
-	    /// \brief Store the last message from hydra.
-	    private: boost::shared_ptr<const gazebo::msgs::Hydra> hydraMsgPtr;
+		/// \brief State flag
+		private: bool jointAttached;
 
-		/// \brief Joint pointer used to grasp objects
-		private: physics::JointPtr fixedJoint;
+		/// \brief State flag
+		private: bool closingGripper;
 
-		/// \brief Gripper and fixed joint flag states
-		private: bool jointAttached, closingGripper, idleGripper, foreFingerInContact;
+		/// \brief State flag
+		private: bool idleGripper;
 
-		/// \brief Flags for pausing the movement of the hand
-		private: bool pauseHand, pauseButtonPressed;
-
-		/// \brief Copy of the recorder instance
-		private: util::LogRecord *logRecorder;
+		/// \brief Fore finger collision sensor status
+		private: bool foreFingerInContact;
 
 		/// \brief Flags for start/stop logging the simulation
-		private: bool logBtnPressed, logOn;
+		private: bool loggingOn;
+
+		/// \brief Log world button state
+		private: bool logBtnPressed;
+
+		/// \brief Desired position of the hand
+		private: math::Vector3 desiredPosition;
+
+		/// \brief Desired orientation of the hand
+		private: math::Quaternion desiredQuat;
+
+		/// \brief Timestamp of the last cycle for the PID
+		private: common::Time prevSimTime;
 
 	};
 }

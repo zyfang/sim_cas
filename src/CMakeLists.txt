@@ -1,10 +1,7 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 
-add_library(HydraHandController SHARED HydraHandController.cc)
 
 add_library(HydraGameController SHARED HydraGameController.cc)
-
-add_library(HydraGameControllerJs SHARED HydraGameControllerJs.cc)
 
 add_library(SpawnLiquid SHARED SpawnLiquid.cc)
 
@@ -16,11 +13,7 @@ add_library(VisPlugin SHARED VisPlugin.cc)
 
 
 
-target_link_libraries(HydraHandController ${GAZEBO_libraries})
-
 target_link_libraries(HydraGameController ${GAZEBO_libraries})
-
-target_link_libraries(HydraGameControllerJs ${GAZEBO_libraries})
 
 target_link_libraries(SpawnLiquid ${GAZEBO_libraries})
 
