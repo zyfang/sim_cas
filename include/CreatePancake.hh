@@ -50,6 +50,7 @@
 
 namespace gazebo
 {
+	// TODO change to a class instead of plugin, to be called from hydra game controller
 	/// \brief plugin creating dynamic joints between the liquid spheres
 	/// in order to create a pancake
 	class CreatePancake : public WorldPlugin

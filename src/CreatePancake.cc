@@ -329,8 +329,8 @@ void CreatePancake::ConnectPancake()
 void CreatePancake::CreateDynamicJoint(
 		physics::LinkPtr _center_link, physics::LinkPtr _ext_link)
 {
-	std::cout << "Creating joint between parent link: " << _center_link->GetName() <<
-			" and child link: " << _ext_link->GetName() << std::endl;
+//	std::cout << "Creating joint between parent link: " << _center_link->GetName() <<
+//			" and child link: " << _ext_link->GetName() << std::endl;
 
 	math::Vector3 axis, direction;
 	physics::JointPtr joint;
@@ -357,12 +357,17 @@ void CreatePancake::CreateDynamicJoint(
 	// set the axis of rotation relative to the local frame
 	joint->SetAxis(0, axis);
 
+
 	// set limits and other parameters
 	joint->SetHighStop(0, this->highStop);
 	joint->SetLowStop(0, this->lowStop);
 
-//	joint->SetDamping(0, this->damping);
-//	joint->SetStiffness(0, this->stiffness);
+
+	joint->SetStiffnessDamping(0, this->stiffness, this->damping);
+
+	joint->SetEffortLimit(0, 10);
+
+
 
 	// TODO deprecated since 4.0.2 ? check how to set them
 	// reducing the error reductions parameter allows joint to exceed the limit
@@ -371,12 +376,16 @@ void CreatePancake::CreateDynamicJoint(
 //	joint->SetParam("stop_cfm", 0, this->cfm);
 //	joint->SetParam("stop_erp", 0, this->erp);
 
-	// fudge factor is used to scale this excess force.
+// fudge factor is used to scale this excess force.
 	// It should have a value between zero and one (the default value).
 	// If the jumping motion is too visible in a joint, the value can be reduced.
 	// Making this value too small can prevent the motor from being able to move the joint away from a stop.
 //	joint->SetParam("fudge_factor", 0, this->fudgeFactor);
 
+	// TODO INFO stiffness, damping formula, erp = 0.005, cfm 1;
+//    double erp, cfm;
+//    erp = stiffness * dt / (stiffness * dt + damping);
+//    cfm = 1.0 / (stiffness * dt + damping);
 
 	// in case joints are breakable, provide feedback
 	if ((this->forceLimit > 0) && (this->distanceLimit > 0))

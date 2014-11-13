@@ -62,7 +62,7 @@
     </include>
 
 	<!-- Load the plugin for publishing Razer Hydra -->
-	<plugin name="hydra" filename="libHydraPlugin.so"></plugin>
+	<!--plugin name="hydra" filename="libHydraPlugin.so"></plugin-->
 
 	<!-- Load the plugin for controlling the environment with Razer Hydra -->
 	<plugin name="HydraHandController" filename="libHydraHandController.so"></plugin>
@@ -100,13 +100,12 @@
 		<fudge_factor>0.0</fudge_factor>
 		<cfm>1.0</cfm>
 		<erp>0.005</erp>
-		<highStop>0.02</highStop>
-		<lowStop>-0.02</lowStop>
+		<highStop>0.15</highStop>
+		<lowStop>-0.15</lowStop>
 		<pancake_inertia>0.000000013</pancake_inertia>
-		<damping>0.001</damping>
-		<stiffness>0.001</stiffness>
-		<auto_disable>0</auto_disable>
-		<force_limit>0</force_limit>
+		<damping>10000000000.0</damping>
+		<stiffness>100.9</stiffness>
+		<force_limit>10</force_limit>
 		<distance_limit>0</distance_limit>
 	</plugin>
 

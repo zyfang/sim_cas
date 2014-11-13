@@ -52,6 +52,7 @@ GZ_REGISTER_WORLD_PLUGIN(HydraHandController)
 //////////////////////////////////////////////////
 HydraHandController::HydraHandController() : offsetPos(0.8, 0, 0.8),
 offsetQuat(-PI/2 + 0.3, 0, -PI/2)
+//offsetQuat(PI/2, 0, - PI/2) javascript offset
 {
 }
 
@@ -212,7 +213,7 @@ void HydraHandController::InitFingerPos()
 	// thumb middle     lower="0.087266463"    upper="1.134464014"
 	// thumb distal     lower="0.087266463"    upper="1.134464014"
 
-	this->jointController->SetPositionTarget("Hand::thumb_joint", 0.1);
+	this->jointController->SetPositionTarget("Hand::thumb_joint", 1.57);
 
 	this->jointController->SetPositionTarget("Hand::thumb_base_joint", 0);
 	this->jointController->SetPositionTarget("Hand::thumb_proximal_joint", 0.1);
@@ -435,6 +436,9 @@ void HydraHandController::OnThumbContact(ConstContactsPtr &_msg)
 	// if the thumb is in contact, the gripper is closing and no joint is attached then attach the joint
 	else if (this->closingGripper && _msg->contact_size() > 0 && !this->jointAttached && this->foreFingerInContact)
 	{
+		//TODO implement similarly
+		//std::string targetModelName = (*iterLinkName).substr(0,(*iterLinkName).rfind("::");
+
 		// set separator
 		boost::char_separator<char> sep("::");
 
@@ -479,6 +483,8 @@ void HydraHandController::OnThumbContact(ConstContactsPtr &_msg)
 //////////////////////////////////////////////////////////////////////////////////////
 void HydraHandController::OnForeFingerContact(ConstContactsPtr &_msg)
 {
+	// TODO it only works if selfcollide is disabled
+	// TODO add separate link to the sdf model with the collision sensor
 	if(_msg->contact_size()>0)
 	{
 		this->foreFingerInContact = true;
