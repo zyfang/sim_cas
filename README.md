@@ -1,4 +1,4 @@
-# hand_sim client
+# Gazebo based Kitchen Games
 
 # prerequisites
  * gazebo
@@ -14,7 +14,7 @@ make
 
 # set up plugin path
 ~~~
-echo "export GAZEBO_PLUGIN_PATH=/<path>/hand_sim_client/build:${GAZEBO_PLUGIN_PATH}" >> ~/.bashrc
+echo "export GAZEBO_PLUGIN_PATH=/<path>/kitchen_games/build:${GAZEBO_PLUGIN_PATH}" >> ~/.bashrc
 source ~/.bashrc
 ~~~
 
