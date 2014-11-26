@@ -43,6 +43,7 @@
 
 #define PI 3.14159265
 
+// TODO create header file add namespace kgclient
 namespace gazebo
 {
   class SpawnLiquid : public WorldPlugin

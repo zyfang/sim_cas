@@ -45,10 +45,10 @@
 #include "gazebo/common/Events.hh"
 #include "gazebo/util/LogRecord.hh"
 
-namespace gazebo
+namespace kgclient
 {   
 	/// \brief HydraGameController class, in controls the robot hand using Hydra as input
-	class HydraGameController : public WorldPlugin
+	class HydraGameController : public gazebo::WorldPlugin
 	{
 		/// \brief Constructor
 		public: HydraGameController();
@@ -57,7 +57,7 @@ namespace gazebo
 		public: virtual ~HydraGameController();
 
 		/// \brief Load plugin
-		protected: virtual void Load(physics::WorldPtr _parent, sdf::ElementPtr _sdf);
+		protected: virtual void Load(gazebo::physics::WorldPtr _parent, sdf::ElementPtr _sdf);
 
 	    /// \brief Update the controller
 	    /// \param[in] _info Update information provided by the server.
@@ -68,7 +68,7 @@ namespace gazebo
 	    private: void OnHydra(ConstHydraPtr &_msg);
 
 		/// \brief apply forces in order to control the hand Pose
-		private: void HandPoseControl(const common::Time _step_time);
+		private: void HandPoseControl(const gazebo::common::Time _step_time);
 
 	    /// \brief Set the initial finger positions
 	    private: void InitFingerPos();
@@ -86,7 +86,7 @@ namespace gazebo
 		private: void UpdateHandPose(ConstHydraPtr& _msg);
 
 		/// \brief Return the required rotational velocity
-		private: math::Vector3 ReturnRotVelocity(const math::Quaternion _curr_quat);
+		private: gazebo::math::Vector3 ReturnRotVelocity(const gazebo::math::Quaternion _curr_quat);
 
 		/// \brief Callback thumb contact sensor
 		private: void OnThumbContact(ConstContactsPtr &_msg);
@@ -95,52 +95,52 @@ namespace gazebo
 		private: void OnForeFingerContact(ConstContactsPtr &_msg);
 
 		/// \brief attach joint with the palm link
-		private: void AttachJoint(const physics::LinkPtr);
+		private: void AttachJoint(const gazebo::physics::LinkPtr);
 
 		/// \brief detach joint from the palm link
 		private: void DetachJoint();
 
 	    /// \brief Pointer to the update event connection
-	    private: event::ConnectionPtr updateConnection;
+	    private: gazebo::event::ConnectionPtr updateConnection;
 
 	    /// \brief Node used for using Gazebo communications.
-	    private: transport::NodePtr gznode;
+	    private: gazebo::transport::NodePtr gznode;
 
 	    /// \brief Subscribe to hydra topic.
-	    private: transport::SubscriberPtr hydraSub;
+	    private: gazebo::transport::SubscriberPtr hydraSub;
 
 		/// \brief thumb contact sensor subscribers
-		private: transport::SubscriberPtr thumbContactSub;
+		private: gazebo::transport::SubscriberPtr thumbContactSub;
 
 		/// \brief fore finger contact sensor subscribers
-		private: transport::SubscriberPtr foreContactSub;
+		private: gazebo::transport::SubscriberPtr foreContactSub;
 
 	    /// \brief Store the last message from hydra.
 	    private: boost::shared_ptr<const gazebo::msgs::Hydra> hydraMsgPtr;
 
 		/// \brief World pointer
-	    private: physics::WorldPtr world;
+	    private: gazebo::physics::WorldPtr world;
 
 	    /// \brief Model pointer
-	    private: physics::ModelPtr handModel;
+	    private: gazebo::physics::ModelPtr handModel;
 
 		/// \brief Hand joints controller
-		private: physics::JointControllerPtr jointController;
+		private: gazebo::physics::JointControllerPtr jointController;
 
 		/// \brief Joint pointer used to grasp objects
-		private: physics::JointPtr fixedJoint;
+		private: gazebo::physics::JointPtr fixedJoint;
 
 		/// \brief Positional offset for the hand
-		private: const math::Vector3 offsetPos;
+		private: const gazebo::math::Vector3 offsetPos;
 
 		/// \brief Orientation offset for the hand
-		private: const math::Quaternion offsetQuat;
+		private: const gazebo::math::Quaternion offsetQuat;
 
 		/// \brief Hand joint rotation PID controllers
-		private: std::vector<common::PID> rotPIDs;
+		private: std::vector<gazebo::common::PID> rotPIDs;
 
 		/// \brief Hand joint position PID controllers
-		private: std::vector<common::PID> controlPIDs;
+		private: std::vector<gazebo::common::PID> controlPIDs;
 
 		/// \brief Hand movement state flag
 		private: bool disableHydra;
@@ -167,13 +167,13 @@ namespace gazebo
 		private: bool logBtnPressed;
 
 		/// \brief Desired position of the hand
-		private: math::Vector3 desiredPosition;
+		private: gazebo::math::Vector3 desiredPosition;
 
 		/// \brief Desired orientation of the hand
-		private: math::Quaternion desiredQuat;
+		private: gazebo::math::Quaternion desiredQuat;
 
 		/// \brief Timestamp of the last cycle for the PID
-		private: common::Time prevSimTime;
+		private: gazebo::common::Time prevSimTime;
 
 	};
 }

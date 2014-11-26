@@ -34,9 +34,9 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
 
-
 #include "CreatePancake.hh"
 
+using namespace kgclient;
 using namespace gazebo;
 
 //////////////////////////////////////////////////
@@ -363,18 +363,11 @@ void CreatePancake::CreateDynamicJoint(
 	joint->SetLowStop(0, this->lowStop);
 
 
-	joint->SetStiffnessDamping(0, this->stiffness, this->damping);
-
-	joint->SetEffortLimit(0, 10);
-
-
-
-	// TODO deprecated since 4.0.2 ? check how to set them
 	// reducing the error reductions parameter allows joint to exceed the limit
-//	joint->SetParam("cfm", 0, this->cfm);
-//	joint->SetParam("erp", 0, this->erp);
-//	joint->SetParam("stop_cfm", 0, this->cfm);
-//	joint->SetParam("stop_erp", 0, this->erp);
+	joint->SetParam("cfm", 0, this->cfm);
+	joint->SetParam("erp", 0, this->erp);
+	joint->SetParam("stop_cfm", 0, this->cfm);
+	joint->SetParam("stop_erp", 0, this->erp);
 
 // fudge factor is used to scale this excess force.
 	// It should have a value between zero and one (the default value).

@@ -36,9 +36,8 @@
 
 #include "VisPlugin.hh"
 
-
+using namespace kgclient;
 using namespace gazebo;
-
 
 // Register this plugin with the simulator
 GZ_REGISTER_VISUAL_PLUGIN(VisPlugin)

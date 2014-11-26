@@ -42,10 +42,10 @@
 #include "gazebo/rendering/rendering.hh"
 
 
-namespace gazebo
+namespace kgclient
 {
 /// \brief class ArrangeModels
-class VisPlugin : public VisualPlugin
+class VisPlugin : public gazebo::VisualPlugin
 {
 	/// \brief Constructor
 	public: VisPlugin();
@@ -54,7 +54,7 @@ class VisPlugin : public VisualPlugin
 	public: virtual ~VisPlugin();
 
 	/// \brief Load plugin
-	protected: virtual void Load(rendering::VisualPtr _parent, sdf::ElementPtr _sdf);
+	protected: virtual void Load(gazebo::rendering::VisualPtr _parent, sdf::ElementPtr _sdf);
 
 	 /// \brief Ogre scene node.
 	 public: Ogre::SceneNode *sceneNode;

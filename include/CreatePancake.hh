@@ -48,12 +48,12 @@
 #include <sstream>
 
 
-namespace gazebo
+namespace kgclient
 {
 	// TODO change to a class instead of plugin, to be called from hydra game controller
 	/// \brief plugin creating dynamic joints between the liquid spheres
 	/// in order to create a pancake
-	class CreatePancake : public WorldPlugin
+	class CreatePancake : public gazebo::WorldPlugin
 	{
 		/// \brief constructor
 		public: CreatePancake();
@@ -62,7 +62,7 @@ namespace gazebo
 		public: virtual ~CreatePancake();
 
 		/// \brief load of the function
-		protected: virtual void Load(physics::WorldPtr _parent, sdf::ElementPtr _sdf);
+		protected: virtual void Load(gazebo::physics::WorldPtr _parent, sdf::ElementPtr _sdf);
 
 		/// \brief Init plugin (Load called first, then Init)
 		protected: virtual void Init();
@@ -90,25 +90,25 @@ namespace gazebo
 
 		/// \brief create a joint between the anchor link and the exterior link
 		private: void CreateDynamicJoint(
-				physics::LinkPtr _parent_link, physics::LinkPtr _child_link);
+				gazebo::physics::LinkPtr _parent_link, gazebo::physics::LinkPtr _child_link);
 
 		/// \brief detach joint when force or distance limit is breached
 		private: void BreakPancakeJoint(unsigned int i);
 
 		/// \brief pointer to the world
-		private: physics::WorldPtr world;
+		private: gazebo::physics::WorldPtr world;
 
 		/// \brief the model of the liquid (the spheres)
-		private: physics::ModelPtr liquidModel;
+		private: gazebo::physics::ModelPtr liquidModel;
 
 		/// \brief pointer to the center link
-		private: physics::LinkPtr centerLink;
+		private: gazebo::physics::LinkPtr centerLink;
 
 		/// \brief vector with the child links
-		private: std::vector<physics::LinkPtr> childLinks;
+		private: std::vector<gazebo::physics::LinkPtr> childLinks;
 
 		/// \brief vector of all the joints between the spheres
-		private: std::vector<physics::JointPtr> pancakeJoints;
+		private: std::vector<gazebo::physics::JointPtr> pancakeJoints;
 
 		/// \brief flags used for creating the joints
 		private: bool centerAndChildLinksInit, pancakeCreated, jointButtonPressed;
@@ -121,13 +121,13 @@ namespace gazebo
 		private: unsigned int childSphereCounter;
 
 	    /// \brief Pointer to the world update event connection
-	    private: event::ConnectionPtr worldConnection;
+	    private: gazebo::event::ConnectionPtr worldConnection;
 
 	    /// \brief Node used for using Gazebo communications.
-	    private: transport::NodePtr gznode;
+	    private: gazebo::transport::NodePtr gznode;
 
 	    /// \brief Subscribe to hydra topic.
-	    private: transport::SubscriberPtr hydraSub;
+	    private: gazebo::transport::SubscriberPtr hydraSub;
 
 	};
 }

@@ -42,10 +42,10 @@
 
 #include <libconfig.h++>
 
-namespace gazebo
+namespace kgclient
 {
 /// \brief class ArrangeModels
-class ArrangeModels : public WorldPlugin
+class ArrangeModels : public gazebo::WorldPlugin
 {
 	/// \brief Constructor
 	public: ArrangeModels();
@@ -54,10 +54,10 @@ class ArrangeModels : public WorldPlugin
 	public: virtual ~ArrangeModels();
 
 	/// \brief Load plugin
-	protected: virtual void Load(physics::WorldPtr _world, sdf::ElementPtr _sdf);
+	protected: virtual void Load(gazebo::physics::WorldPtr _world, sdf::ElementPtr _sdf);
 
 	/// \brief Check if the two bb collide
-	private: bool DoBBIntersect(double _pos_x, double _pos_y, double _length_x, double _length_y, math::Box _bb2);
+	private: bool DoBBIntersect(double _pos_x, double _pos_y, double _length_x, double _length_y, gazebo::math::Box _bb2);
 
 };
 }

@@ -44,6 +44,7 @@
 
 #define PI 3.14159265359
 
+using namespace kgclient;
 using namespace gazebo;
 
 // Register this plugin with the simulator
