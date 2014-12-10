@@ -1,4 +1,4 @@
- # Interactive Kitchen Games in Gazebo
+# Interactive Kitchen Games in Gazebo
 
 ## Prerequisites
 Install Gazebo:
