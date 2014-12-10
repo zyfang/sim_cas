@@ -58,7 +58,7 @@ namespace gazebo
     	std::stringstream xml;
     	int spawned, level;
     	unsigned int nr_spheres;
-    	double mass, radius, mu, mu2, slip1, slip2, cfm, erp, kp, kd, bounce, inertia;
+    	double mass, radius, spawn_diameter, mu, mu2, slip1, slip2, cfm, erp, kp, kd, bounce, inertia;
     	double friction, friction2, roll_friction;
     	bool auto_disable;
 
@@ -91,8 +91,19 @@ namespace gazebo
         else
         {
         	init_pos = _parent->GetModel(_sdf->Get<std::string>("inObject"))->GetWorldPose().pos;
-        	init_pos.z += 0.02; // adding offset on the Z axis
+            //if a parameter <inObjectZOffset> was defined, add offset to z position, otherwise there is no offset
+            if(_sdf->HasElement("inObjectZOffset"))
+            {
+                init_pos.z += _sdf->Get<double>("inObjectZOffset"); // adding offset on the Z axis
+            }
         }
+
+        if(!_sdf->HasElement("spawn_diameter"))
+        {
+            std::cout << "Missing parameter <spawn_diameter> in SpawnLiquid, default to 0.02" << std::endl;
+            spawn_diameter = 0.02;
+        }
+        else spawn_diameter=_sdf->Get<double>("spawn_diameter");
 
     	////////////// Set up liquid sphere mass
     	if (!_sdf->HasElement("mass"))
@@ -255,7 +266,7 @@ namespace gazebo
 
     	for (unsigned int i=0; i<nr_spheres; i++)
     	{
-    		p3 = SpawnLiquid::part_position(i, radius, spawned, level);
+    		p3 = SpawnLiquid::part_position(i, radius, spawn_diameter, spawned, level);
     		xml << "\t\t<link name='sphere_link_" << i << "'>\n";
         	xml << "\t\t\t<self_collide>true</self_collide>\n";
     		xml << "\t\t\t<pose>" << p3.x << " " << p3.y << " " << p3.z << " 0 0 0</pose>\n";
@@ -348,7 +359,7 @@ namespace gazebo
 
     }
 
-    public: math::Vector3 part_position(int i, double radius, int& spawned, int& level)
+    public: math::Vector3 part_position(int i, double radius, double spawn_diameter, int& spawned, int& level)
     {
 		math::Vector3 v3;
 		int ii, index_c, c_crt, max_c_in_c;
@@ -370,7 +381,7 @@ namespace gazebo
 			max_c_in_c = c_crt * 6;
 			R = c_crt * size;
 
-			if((index_c == (max_c_in_c - 1)) && ((2*R) + (size) >= 0.025))
+			if((index_c == (max_c_in_c - 1)) && ((2*R) + (size) >= spawn_diameter))
 			{
 				spawned = i+1;
 				level++;
