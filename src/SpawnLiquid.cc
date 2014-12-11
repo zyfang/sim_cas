@@ -60,12 +60,16 @@ void SpawnLiquid::Load(physics::WorldPtr _parent, sdf::ElementPtr _sdf)
 	// set the world
 	this->world = _parent;
 
-	// Get the sdf parameters
-	SpawnLiquid::GetSDFParameters(_sdf);
+	// get current model count
+	unsigned int init_model_count = this->world->GetModelCount();
+
+	// Get the sdf parameters and spawn the liquid
+	SpawnLiquid::GetParamAndSpawnLiquid(_sdf);
+
 }
 
 //////////////////////////////////////////////////
-void SpawnLiquid::GetSDFParameters(const sdf::ElementPtr _sdf)
+void SpawnLiquid::GetParamAndSpawnLiquid(const sdf::ElementPtr _sdf)
 {
 	math::Vector3 init_pos;
 
@@ -251,15 +255,12 @@ void SpawnLiquid::GetSDFParameters(const sdf::ElementPtr _sdf)
 	else auto_disable = _sdf->Get<bool>("autoDisable");
 
 
-
 	// Generate liquid sdf
 	sdf::SDF liquidSDF = SpawnLiquid::GenerateLiquidSDF(
 			 init_pos, nr_spheres, sphere_radius, spawn_diam, inertia, mass, auto_disable);
 
-
 	// Insert generated sdf into the world
 	this->world->InsertModelSDF(liquidSDF);
-
 
 	std::cout << "******** LIQUID SPAWNED *********" << std::endl;
 }

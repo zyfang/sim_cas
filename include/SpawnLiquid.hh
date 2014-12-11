@@ -57,7 +57,7 @@ namespace sim_games
 		protected: virtual void Load(gazebo::physics::WorldPtr _parent, sdf::ElementPtr _sdf);
 
 		/// \brief Get the SDF plugin parameters
-		private: void GetSDFParameters(const sdf::ElementPtr _sdf);
+		private: void GetParamAndSpawnLiquid(const sdf::ElementPtr _sdf);
 
 		/// \brief Generate liquid sdf
 		private: sdf::SDF GenerateLiquidSDF(

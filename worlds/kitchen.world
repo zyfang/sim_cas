@@ -72,7 +72,7 @@
 	<inertia> for spheres: (2*m*r^2)/5 -->	
 	<plugin name="SpawnLiquid" filename="libSpawnLiquid.so">
 		<initPos>0.2 0.1 0.88</initPos>
-		<nrSpheres>720</nrSpheres>
+		<nrSpheres>72</nrSpheres>
 		<inObject>Cup</inObject>
 		<inObjectZOffset>0.02</inObjectZOffset>
 		<mass>0.0006</mass>
