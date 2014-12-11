@@ -36,7 +36,7 @@
 
 #include "ArrangeModels.hh"
 
-using namespace kgclient;
+using namespace sim_games;
 using namespace gazebo;
 
 // define random gen

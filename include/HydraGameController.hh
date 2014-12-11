@@ -37,15 +37,11 @@
 #ifndef HYDRA_GAME_CONTROLLER_HH
 #define HYDRA_GAME_CONTROLLER_HH
 
-#include <boost/thread/mutex.hpp>
 #include "gazebo/physics/physics.hh"
-#include "gazebo/msgs/msgs.hh"
-#include "gazebo/transport/TransportTypes.hh"
 #include "gazebo/common/Plugin.hh"
-#include "gazebo/common/Events.hh"
 #include "gazebo/util/LogRecord.hh"
 
-namespace kgclient
+namespace sim_games
 {   
 	/// \brief HydraGameController class, in controls the robot hand using Hydra as input
 	class HydraGameController : public gazebo::WorldPlugin

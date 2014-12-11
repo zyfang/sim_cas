@@ -48,7 +48,7 @@
 #include <sstream>
 
 
-namespace kgclient
+namespace sim_games
 {
 	// TODO change to a class instead of plugin, to be called from hydra game controller
 	/// \brief plugin creating dynamic joints between the liquid spheres

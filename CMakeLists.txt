@@ -26,7 +26,6 @@ include_directories(
 
 link_directories(
 	${GAZEBO_LIBRARY_DIRS}
-	${OGRE_INCLUDE_DIRS}
 )
 
 add_subdirectory(src)

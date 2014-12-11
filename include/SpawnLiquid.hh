@@ -1,8 +1,8 @@
 /*********************************************************************
  * Software License Agreement (BSD License)
  *
- *  Copyright (c) 2013, Andrei Haidu, Institute for Artificial Intelligence,
- *  Universität Bremen.
+ *  Copyright (c) 2013, Andrei Haidu,
+ *  Institute for Artificial Intelligence, Universität Bremen.
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -34,38 +34,53 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
 
-#ifndef VIS_PLUGIN_HH
-#define VIS_PLUGIN_HH
+#ifndef SPAWN_LIQUID_PLUGIN_HH
+#define SPAWN_LIQUID_PLUGIN_HH
 
-#include "gazebo/gazebo.hh"
-#include "gazebo/gui/GuiIface.hh"
-#include "gazebo/rendering/rendering.hh"
-
+#include <gazebo/gazebo.hh>
+#include <gazebo/physics/physics.hh>
+#include <gazebo/common/common.hh>
 
 namespace sim_games
 {
-/// \brief class VisPlugin
-class VisPlugin : public gazebo::VisualPlugin
-{
-	/// \brief Constructor
-	public: VisPlugin();
 
-	/// \brief Destructor
-	public: virtual ~VisPlugin();
+	/// \brief class SpawnLiquid
+	class SpawnLiquid : public gazebo::WorldPlugin
+	{
+		/// \brief Constructor
+		public: SpawnLiquid();
 
-	/// \brief Load plugin
-	protected: virtual void Load(gazebo::rendering::VisualPtr _parent, sdf::ElementPtr _sdf);
+		/// \brief Destructor
+		public: virtual ~SpawnLiquid();
 
-	/// \brief Ogre scene node.
-	public: Ogre::SceneNode *sceneNode;
+		/// \brief Load plugin
+		protected: virtual void Load(gazebo::physics::WorldPtr _parent, sdf::ElementPtr _sdf);
 
-	/// \brief Ogre entity.
-	public: Ogre::Entity *entity;
+		/// \brief Get the SDF plugin parameters
+		private: void GetSDFParameters(const sdf::ElementPtr _sdf);
 
-	/// \brief Ogre scene manager.
-	public: Ogre::SceneManager *sceneManager;
+		/// \brief Generate liquid sdf
+		private: sdf::SDF GenerateLiquidSDF(
+				const gazebo::math::Vector3 _init_pos,
+				const unsigned int _nr_spheres,
+				const double _sphere_radius,
+				const double _spawn_diam,
+				const double _inertia,
+				const double _mass,
+				const bool _auto_disable
+				);
 
-};
+		/// \brief Arrange spheres in a circular fashion
+		private: gazebo::math::Vector3 ArrangeSphere(
+				const int _curr_sphere_index,
+				const double _radius,
+				const double _spawn_diameter,
+				int& _spawned,
+				int& _level);
+
+		/// \brief World pointer
+		private: gazebo::physics::WorldPtr world;
+
+	};
 }
-
 #endif

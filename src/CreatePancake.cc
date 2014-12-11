@@ -36,7 +36,7 @@
 
 #include "CreatePancake.hh"
 
-using namespace kgclient;
+using namespace sim_games;
 using namespace gazebo;
 
 //////////////////////////////////////////////////

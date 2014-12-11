@@ -42,7 +42,7 @@
 
 #include <libconfig.h++>
 
-namespace kgclient
+namespace sim_games
 {
 /// \brief class ArrangeModels
 class ArrangeModels : public gazebo::WorldPlugin

@@ -36,7 +36,7 @@
 
 #include "VisPlugin.hh"
 
-using namespace kgclient;
+using namespace sim_games;
 using namespace gazebo;
 
 // Register this plugin with the simulator

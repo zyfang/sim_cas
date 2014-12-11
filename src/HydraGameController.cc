@@ -35,16 +35,12 @@
  *********************************************************************/
 
 #include "HydraGameController.hh"
-#include <boost/bind.hpp>
 #include <boost/tokenizer.hpp>
-#include <gazebo/gazebo.hh>
-#include <gazebo/physics/physics.hh>
-#include <gazebo/util/LogRecord.hh>
 #include <gazebo/transport/transport.hh>
 
 #define PI 3.14159265359
 
-using namespace kgclient;
+using namespace sim_games;
 using namespace gazebo;
 
 // Register this plugin with the simulator

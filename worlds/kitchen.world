@@ -71,12 +71,16 @@
 	~SOFT bodies cfm=erp=1 or kp,kd  < 1
 	<inertia> for spheres: (2*m*r^2)/5 -->	
 	<plugin name="SpawnLiquid" filename="libSpawnLiquid.so">
-		<init_pos>0.2 0.1 0.88</init_pos>
+		<initPos>0.2 0.1 0.88</initPos>
+		<nrSpheres>720</nrSpheres>
 		<inObject>Cup</inObject>
-		<nr_spheres>72</nr_spheres>
+		<inObjectZOffset>0.02</inObjectZOffset>
 		<mass>0.0006</mass>
-		<radius>0.0045</radius>		
-		<friction>1</friction>			
+		<sphereRadius>0.0045</sphereRadius>	
+		<spawnDiam>0.03</spawnDiam>
+		<inertia>0.00005</inertia>
+		<autoDisable>0</autoDisable>
+		<friction>1</friction>	
 		<friction2>1</friction2>
 		<roll_friction>1</roll_friction>
 		<mu>1.0</mu>			
@@ -88,8 +92,6 @@
 		<kp>100000000.8</kp>			
 		<kd>1.2</kd>
 		<bounce>0.0</bounce>
-		<inertia>0.00005</inertia>
-		<auto_disable>0</auto_disable>
 	</plugin>
 
 	<!-- dynamically creates joints between the spheres -->
