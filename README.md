@@ -2,9 +2,11 @@
 
 ## Prerequisites
 Install Gazebo:
-  * http://gazebosim.org/tutorials?tut=install_ubuntu&cat=install
+ * http://gazebosim.org/tutorials?tut=install_ubuntu&cat=install
+  
 Install libconfig library for reading config files  
  * libconfig
+
 Razer Hydra device for interaction
 
 # Build
