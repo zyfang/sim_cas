@@ -74,7 +74,7 @@
 		<initPos>0.2 0.1 0.88</initPos>
 		<nrSpheres>72</nrSpheres>
 		<inObject>Cup</inObject>
-		<inObjectZOffset>0.02</inObjectZOffset>
+		<inObjectZOffset>0.07729136</inObjectZOffset>
 		<mass>0.0006</mass>
 		<sphereRadius>0.0045</sphereRadius>	
 		<spawnDiam>0.03</spawnDiam>
