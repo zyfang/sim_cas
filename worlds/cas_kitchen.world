@@ -52,7 +52,7 @@
     </include>
 
     <include>
-        <uri>model://mug_exp/mug07</uri>
+        <uri>model://mug_exp/mug00</uri>
         <pose>0.2 0.1 0.855 0.0 0 0</pose>
     </include>
 
@@ -72,7 +72,7 @@
 		<initPos>0.2 0.1 0.88</initPos>
 		<nrSpheres>72</nrSpheres>
 		<inObject>Cup</inObject>
-		<inObjectZOffset>0.08683992</inObjectZOffset>
+		<inObjectZOffset>0.02</inObjectZOffset>
 		<mass>0.0006</mass>
 		<sphereRadius>0.0045</sphereRadius>	
 		<spawnDiam>0.03</spawnDiam>
@@ -92,8 +92,9 @@
 		<bounce>0.0</bounce>
 	</plugin>
 
+	<!-- commented out because of razerhydra problem: gets button pressed signal in the beginning sometimes (~50%) even though no buttons are pressed -->
 	<!-- dynamically creates joints between the spheres -->
-	<!-- reducing the error reductions parameter (erp) allows joint to exceed the limit -->
+	<!-- reducing the error reductions parameter (erp) allows joint to exceed the limit
 	<plugin name="CreatePancake" filename="libCreatePancake.so">
 		<stop_cfm>0.001</stop_cfm>
 		<stop_erp>0.0005</stop_erp>
@@ -108,9 +109,9 @@
 		<auto_disable>0</auto_disable>
 		<force_limit>0</force_limit>
 		<distance_limit>0</distance_limit>
-	</plugin>
+	</plugin-->
 
-	<!-- Visual Plugin with dummy model -->
+	<!-- Visual Plugin with dummy model
 	<model name="dummy_vis_model">
 		<link name="dummy_vis_link">
 		  <visual name="dummy_vis">
@@ -121,7 +122,7 @@
 			<transparency>1</transparency>
 		  </visual>
 		</link>
-	  </model>
+	  </model-->
 
   </world>
 </sdf>
