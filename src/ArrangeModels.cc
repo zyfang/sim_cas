@@ -220,12 +220,12 @@ void ArrangeModels::Load(physics::WorldPtr _world, sdf::ElementPtr _sdf)
 //////////////////////////////////////////////////
 bool ArrangeModels::DoBBIntersect(double _pos_x, double _pos_y, double _length_x, double _length_y, math::Box _bb2)
 {
- 	return std::abs(_pos_x - _bb2.GetCenter().x) * 2 < (_length_x + _bb2.GetXLength()) &&
-			std::abs(_pos_y - _bb2.GetCenter().y) * 2 < (_length_y + _bb2.GetYLength())  ;
+ 	// return std::abs(_pos_x - _bb2.GetCenter().x) * 2 < (_length_x + _bb2.GetXLength()) &&
+		// 	std::abs(_pos_y - _bb2.GetCenter().y) * 2 < (_length_y + _bb2.GetYLength())  ;
 
  	// Until the get center pull request gets accepted
-// 	return std::abs(_pos_x - (_bb2.min.x + (_bb2.max.x - _bb2.min.x) / 2)) * 2 < (_length_x + _bb2.GetXLength()) &&
-//			std::abs(_pos_y - (_bb2.min.y + (_bb2.max.y - _bb2.min.y) / 2)) * 2 < (_length_y + _bb2.GetYLength());
+	return std::abs(_pos_x - (_bb2.min.x + (_bb2.max.x - _bb2.min.x) / 2)) * 2 < (_length_x + _bb2.GetXLength()) &&
+			std::abs(_pos_y - (_bb2.min.y + (_bb2.max.y - _bb2.min.y) / 2)) * 2 < (_length_y + _bb2.GetYLength());
 }
 
 

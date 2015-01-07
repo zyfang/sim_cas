@@ -66,19 +66,18 @@ void VisPlugin::Load(rendering::VisualPtr _parent, sdf::ElementPtr _sdf)
 	Ogre::SceneNode *min_node;
 	Ogre::SceneNode *max_node;
 
-
 	// set scene node
 	min_node = this->sceneManager->getRootSceneNode()->createChildSceneNode(
-			"MinSceneNode");
+				"MinSceneNode");
 
 	max_node = this->sceneManager->getRootSceneNode()->createChildSceneNode(
-			"MaxSceneNode");
+				"MaxSceneNode");
 
 	min_entity = this->sceneManager->createEntity("MinSphere",
-			Ogre::SceneManager::PT_SPHERE);
+				Ogre::SceneManager::PT_SPHERE);
 
 	max_entity = this->sceneManager->createEntity("MaxSphere",
-			Ogre::SceneManager::PT_SPHERE);
+				Ogre::SceneManager::PT_SPHERE);
 
 	min_entity->setMaterialName("Gazebo/Red");
 
@@ -92,7 +91,7 @@ void VisPlugin::Load(rendering::VisualPtr _parent, sdf::ElementPtr _sdf)
 
 	max_node->setScale(0.001, 0.001, 0.001);
 
-	min_node->setPosition(-0.1, -0.3, 0.0);
+	min_node->setPosition(-0.1, -0.4, 0.0);
 	max_node->setPosition(0.9, -1.2, 2.0);
 
 	min_node->attachObject(min_entity);
@@ -100,7 +99,6 @@ void VisPlugin::Load(rendering::VisualPtr _parent, sdf::ElementPtr _sdf)
 
 	min_node->setVisible(true);
 	max_node->setVisible(true);
-
 }
 
 

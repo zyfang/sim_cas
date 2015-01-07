@@ -1,5 +1,4 @@
-DATE TIME	ORDER_FILE	MSG
-05/01/2015 14:29:47	AfS_orderA.txt	test
-05/01/2015 14:31:35	AfS_orderB.txt	test
-05/01/2015 14:33:32	AfS_orderA.txt	another test
-05/01/2015 16:08:16	AfS_orderA.txt	test
+DATE TIME	ORDER_FILE	FILL_LEVELS	COMMENTS
+05/01/2015 21:18:13	AfS_orderA.txt	0,2,8,4,7,6,	test2
+05/01/2015 21:33:53	AfS_orderB.txt	2,4,0,6,8,7,	test
+06/01/2015 14:34:23	AfS_orderA.txt	prac,prac,0,2,8,4,7,6,	test
