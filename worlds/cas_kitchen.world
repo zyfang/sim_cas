@@ -70,12 +70,12 @@
 	<inertia> for spheres: (2*m*r^2)/5 -->	
 	<plugin name="SpawnLiquid" filename="libSpawnLiquid.so">
 		<initPos>0.2 0.1 0.88</initPos>
-		<nrSpheres>72</nrSpheres>
+		<nrSpheres>150</nrSpheres>
 		<inObject>Cup</inObject>
-		<inObjectZOffset>0.02</inObjectZOffset>
+		<inObjectZOffset>0.09529136</inObjectZOffset>
 		<mass>0.0006</mass>
 		<sphereRadius>0.0045</sphereRadius>	
-		<spawnDiam>0.03</spawnDiam>
+		<spawnDiam>0.05</spawnDiam>
 		<inertia>0.00005</inertia>
 		<autoDisable>0</autoDisable>
 		<friction>1</friction>	
