@@ -52,7 +52,7 @@
     </include>
 
     <include>
-        <uri>model://mug_exp/mug00</uri>
+        <uri>model://mug_exp2/mug16</uri>
         <pose>0.2 0.1 0.855 0.0 0 0</pose>
     </include>
 
@@ -72,7 +72,7 @@
 		<initPos>0.2 0.1 0.88</initPos>
 		<nrSpheres>72</nrSpheres>
 		<inObject>Cup</inObject>
-		<inObjectZOffset>0.02</inObjectZOffset>
+		<inObjectZOffset>0.03527766</inObjectZOffset>
 		<mass>0.0006</mass>
 		<sphereRadius>0.0045</sphereRadius>	
 		<spawnDiam>0.03</spawnDiam>

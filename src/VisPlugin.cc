@@ -91,8 +91,8 @@ void VisPlugin::Load(rendering::VisualPtr _parent, sdf::ElementPtr _sdf)
 
 	max_node->setScale(0.001, 0.001, 0.001);
 
-	min_node->setPosition(-0.1, -0.4, 0.0);
-	max_node->setPosition(0.9, -1.2, 2.0);
+	min_node->setPosition(0.3728,0.27972,1.32483);
+	max_node->setPosition(0.35770719716923255,0.3440773829384703,1.279770766051533);
 
 	min_node->attachObject(min_entity);
 	max_node->attachObject(max_entity);
