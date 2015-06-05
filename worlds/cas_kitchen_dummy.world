@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<sdf version="1.5">
+  <world name="kitchen_world">
+
+    <physics type="ode">
+      <gravity>0 0 -9.8</gravity>
+        <!--max_step_size>0.0016</max_step_size>
+		<real_time_update_rate>625</real_time_update_rate-->
+        <max_step_size>0.001</max_step_size>
+		<real_time_update_rate>1000</real_time_update_rate>
+    </physics>
+
+	<gui>
+	  <camera name="kitchen_camera">
+		<pose>-1 0.1 1.5 0 0.4 0</pose>
+	  </camera>
+	</gui>
+
+    <include>
+      <uri>model://kitchen_floor</uri>
+    </include>
+
+    <include>
+      <uri>model://kitchen_table</uri>
+    </include>
+
+    <include>
+        <uri>model://pancake_maker</uri>
+        <pose>0.3 0.4 0.89 0 0 0</pose>
+    </include>
+
+    <include>
+      <uri>model://hit_hand</uri>
+      <pose>0 0 1 0 0 0</pose>
+    </include>
+
+    <include>
+        <uri>model://mug</uri>
+        <!--pose>0.2 0.1 1.855 0.0 0 0</pose-->
+        <pose>0.2 0.1 0.89 0 0 0</pose>
+    </include>
+
+    <!-- Plugin for loading models -->
+	<plugin name="ArrangeModels" filename="libArrangeModels.so"/>
+
+	<!--~HARD bodies cfm=erp=0, kp=kd=1000000000000
+	~SOFT bodies cfm=erp=1 or kp,kd  < 1
+	<inertia> for spheres: (2*m*r^2)/5 -->	
+	<plugin name="SpawnLiquid" filename="libSpawnLiquid.so">
+		<initPos>0.2 0.1 0.88</initPos>
+		<nrSpheres>150</nrSpheres>
+		<inObject>Cup</inObject>
+		<inObjectZOffset>0.03527766</inObjectZOffset>
+		<mass>0.0006</mass>
+		<sphereRadius>0.0045</sphereRadius>	
+		<spawnDiam>0.05</spawnDiam>
+		<inertia>0.00005</inertia>
+		<autoDisable>0</autoDisable>
+		<friction>1</friction>	
+		<friction2>1</friction2>
+		<roll_friction>1</roll_friction>
+		<mu>1.0</mu>			
+		<mu2>1.0</mu2>
+		<slip1>1</slip1>			
+		<slip2>1</slip2>
+		<cfm>1.0</cfm>			
+		<erp>0.00000002</erp>
+		<kp>100000000.8</kp>			
+		<kd>1.2</kd>
+		<bounce>0.0</bounce>
+	</plugin>
+
+  </world>
+</sdf>

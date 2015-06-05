@@ -370,7 +370,7 @@ sdf::SDF SpawnLiquid::GenerateLiquidSDF(
 		sdf_ss << "\t\t\t\t<material>\n";
 		sdf_ss << "\t\t\t\t\t<script>\n";
 		sdf_ss << "\t\t\t\t\t\t<uri>file://media/materials/scripts/gazebo.material</uri>\n";
-		sdf_ss << "\t\t\t\t\t\t<name>Gazebo/Red</name>\n";
+		sdf_ss << "\t\t\t\t\t\t<name>Gazebo/Blue</name>\n";
 		sdf_ss << "\t\t\t\t\t</script>\n";
 		sdf_ss << "\t\t\t\t</material>\n";
 		sdf_ss << "\t\t\t</visual>\n";

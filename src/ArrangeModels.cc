@@ -214,6 +214,8 @@ void ArrangeModels::Load(physics::WorldPtr _world, sdf::ElementPtr _sdf)
 
 		// add model to the arranged ones
 		arranged_models.push_back(r_model);
+
+		std::cout << random_names[i].c_str() << ":" << std::setprecision(4) << rand_pos.x <<","<< std::setprecision(4) << rand_pos.y << "," << std::setprecision(4) << rand_pos.z << std::endl;
 	}
 }
 
