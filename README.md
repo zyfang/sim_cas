@@ -1,4 +1,5 @@
 # Interactive Kitchen Games in Gazebo
+Mirror of https://bitbucket.org/zyfang/sim_cas
 
 ## Prerequisites
 Install Gazebo:
@@ -9,7 +10,7 @@ Install libconfig library for reading config files
 
 Razer Hydra device for interaction
 
-# Build
+## Build
 ~~~
 mkdir build
 cd build
@@ -17,18 +18,18 @@ cmake ..
 make
 ~~~
 
-# Set up plugin path
+## Set up plugin path
 ~~~
 echo "export GAZEBO_PLUGIN_PATH=/<path>/kitchen_games/build:${GAZEBO_PLUGIN_PATH}" >> ~/.bashrc
 source ~/.bashrc
 ~~~
 
-# Run example
+## Run example
 ~~~
 gazebo worlds/kitchen.world -u --verbose
 ~~~
 
-# Razer Hydra device (right) buttons :
+## Razer Hydra device (right) buttons :
  * `middle button` -> starts/stops hand tracking
  * `bumper button` -> creates pancake
  * `button 2` -> starts/stops logging the data
