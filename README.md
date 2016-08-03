@@ -2,7 +2,7 @@
 Mirror of https://bitbucket.org/zyfang/sim_cas
 
 ## Prerequisites
-Install Gazebo:
+Install Gazebo 5.3.0:
  * http://gazebosim.org/tutorials?tut=install_ubuntu&cat=install
   
 Install libconfig library for reading config files  
