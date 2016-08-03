@@ -11,6 +11,11 @@ add_library(ArrangeModels SHARED ArrangeModels.cc)
 
 add_library(VisPlugin SHARED VisPlugin.cc)
 
+add_library(SpawnUnits SHARED SpawnUnits.cc)
+target_link_libraries(SpawnUnits ${GAZEBO_libraries})
+
+add_library(HydraFreezeModels SHARED HydraFreezeModels.cc)
+target_link_libraries(HydraFreezeModels ${GAZEBO_libraries})
 
 
 target_link_libraries(HydraGameController ${GAZEBO_libraries})

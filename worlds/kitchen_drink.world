@@ -38,12 +38,12 @@
     </include>
 
     <include>
-      <uri>model://kitchen_table</uri>
+      <uri>model://table_lab</uri>
     </include>
 
     <include>
         <uri>model://red_metal_cup</uri>
-        <pose>0.3 0.4 0.89 0 0 0</pose>
+        <pose>-0.2 0.4 0.87 0 0 0</pose>
     </include>
 
     <include>
@@ -53,11 +53,13 @@
 
     <include>
         <uri>model://buttermilk2</uri>
-        <pose>0.2 0.1 0.89 0.0 0 0</pose>
+        <pose>0 0.1 0.87 0.0 0 0</pose>
     </include>
 
     <!-- Plugin for loading models -->
-	<plugin name="ArrangeModels" filename="libArrangeModels.so"/>
+	<plugin name="ArrangeModels" filename="libArrangeModels.so">
+      <config_file>config/arrange_models.cfg</config_file>
+    </plugin>
 
 	<!-- Load the plugin for publishing Razer Hydra -->
 	<plugin name="hydra" filename="libHydraPlugin.so"/>
@@ -70,17 +72,17 @@
 	<inertia> for spheres: (2*m*r^2)/5 -->	
 	<plugin name="SpawnLiquid" filename="libSpawnLiquid.so">
 		<initPos>0.2 0.1 0.88</initPos>
-		<nrSpheres>150</nrSpheres>
+		<nrSpheres>200</nrSpheres>
 		<inObject>Buttermilk</inObject>
-		<inObjectZOffset>0.03</inObjectZOffset>
+		<inObjectZOffset>0.025</inObjectZOffset>
 		<mass>0.0006</mass>
 		<sphereRadius>0.004</sphereRadius>	
-		<spawnDiam>0.02</spawnDiam>
+		<spawnDiam>0.05</spawnDiam>
 		<inertia>0</inertia>
 		<autoDisable>0</autoDisable>
-<!-- 		<friction>0.3</friction>	
-		<friction2>0.3</friction2>
-		<roll_friction>0.3</roll_friction> -->
+		<friction>0</friction>	
+		<friction2>0</friction2>
+		<roll_friction>0</roll_friction>
 		<mu>0</mu>			
 		<mu2>0</mu2>
 		<slip1>0</slip1>			
