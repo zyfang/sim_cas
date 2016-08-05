@@ -120,6 +120,10 @@ void SpawnUnits::Load(physics::WorldPtr _parent, sdf::ElementPtr _sdf)
     // unit size
     const double unit_size =
             GetSDFValue(std::string("unitSize"), _sdf, 0.1);
+    
+    // unit length
+    const double unit_length =
+            GetSDFValue(std::string("unitLength"), _sdf, 0.04);
 
     // inertia vect
     const math::Vector3 inertia_vect =
@@ -197,7 +201,7 @@ void SpawnUnits::Load(physics::WorldPtr _parent, sdf::ElementPtr _sdf)
     // Generate sdf
     const sdf::SDF generatedSDF = SpawnUnits::GenerateSDF(
                 model_name, spawn_geometry, vis_geometry, unit_nr, spawn_diam, spawn_pos,
-                inertia_vect, unit_mass, unit_size, cfm, erp, kp, kd, collide_bitmask,
+                inertia_vect, unit_mass, unit_size, unit_length, cfm, erp, kp, kd, collide_bitmask,
                 scripts_uri, textures_uri, mesh_uri, mesh_scale, scripts_name, static_flag);
 
     // Insert generated sdf into the world
@@ -219,6 +223,7 @@ sdf::SDF SpawnUnits::GenerateSDF(
         const gazebo::math::Vector3 _inertia_vect,
         const double _unit_mass,
         const double _unit_size,
+        const double _unit_length,
         const double _cfm,
         const double _erp,
         const double _kp,
@@ -290,7 +295,7 @@ sdf::SDF SpawnUnits::GenerateSDF(
             {
                 sdf_ss << "\t\t\t\t\t<cylinder>\n";
                 sdf_ss << "\t\t\t\t\t\t<radius>" << _unit_size << "</radius>\n";
-                sdf_ss << "\t\t\t\t\t\t<length>" << _unit_size / 3 << "</length>\n";
+                sdf_ss << "\t\t\t\t\t\t<length>" << _unit_length << "</length>\n";
                 sdf_ss << "\t\t\t\t\t</cylinder>\n";
             }
             else if(_spawn_geometry == "mesh")
@@ -359,7 +364,7 @@ sdf::SDF SpawnUnits::GenerateSDF(
             {
                 sdf_ss << "\t\t\t\t\t<cylinder>\n";
                 sdf_ss << "\t\t\t\t\t\t<radius>" << _unit_size << "</radius>\n";
-                sdf_ss << "\t\t\t\t\t\t<length>" << _unit_size / 3 << "</length>\n";
+                sdf_ss << "\t\t\t\t\t\t<length>" << _unit_length << "</length>\n";
                 sdf_ss << "\t\t\t\t\t</cylinder>\n";
             }
             else if(_vis_geometry == "mesh")

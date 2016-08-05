@@ -4,15 +4,15 @@
 
     <gui>
       <camera name="kitchen_camera">
-	<pose>-1 0.1 1.5 0 0.4 0</pose>
+  <pose>-1 0.1 1.5 0 0.4 0</pose>
       </camera>
     </gui>
 
     <scene>
       <sky>
-	<clouds>
-	  <speed>12</speed>
-	</clouds>
+  <clouds>
+    <speed>12</speed>
+  </clouds>
       </sky>
     </scene>
 
@@ -51,33 +51,15 @@
     </include>
 
     <include>
+      <uri>model://green_bowl</uri>
+      <name>GreenBowl</name>
+      <pose>0.3 -0.1 0.85 0.0 0 0</pose>
+    </include>
+
+    <include>
       <uri>model://cheese_bowl</uri>
       <name>CheeseBowl</name>
-      <pose>0.2 0.0 0.85 0.0 0 0</pose>
-    </include>
-
-    <include>
-      <uri>model://champignon_bowl</uri>
-      <name>ChampignonBowl</name>
-      <pose>0.4 -0.1 0.85 0.0 0 0</pose>
-    </include>
-
-<!--    <include>
-      <uri>model://bacon_bowl</uri>
-      <name>BaconBowl</name>
-      <pose>0.4 -0.3 0.85 0.0 0 0</pose>
-    </include>
-
-    <include>
-      <uri>model://olive_bowl</uri>
-      <name>OliveBowl</name>
-      <pose>0.2 -0.2 0.85 0.0 0 0</pose>
-    </include>-->
-
-    <include>
-      <uri>model://mug</uri>
-      <name>Cup</name>
-      <pose>0.6 0.4 0.855 0.0 0 0</pose>
+      <pose>0.4 0.8 0.85 0.0 0 0</pose>
     </include>
 
     <include>
@@ -92,14 +74,14 @@
     <plugin name="HydraGameController" filename="libHydraGameController.so"></plugin> 
 
         <!-- Plugin for loading models -->
-    <plugin name="ArrangeModels" filename="libArrangeModels.so">
+<!--     <plugin name="ArrangeModels" filename="libArrangeModels.so">
       <config_file>config/arrange_pizza.cfg</config_file>
-    </plugin>
+    </plugin> -->
 
     <!--~HARD bodies (cfm=erp=0 no influence?), kp=1000000000000 kd=1000
     ~SOFT bodies (cfm=erp=1 no influence?) or kp,kd  < 1
     <inertia> for spheres: (2*m*r^2)/5 -->
-    <plugin name="SpawnCheese" filename="libSpawnUnits.so">
+<!--     <plugin name="SpawnCheese" filename="libSpawnUnits.so">
       <modelName>Cheese</modelName>
       <geometry>box</geometry>
       <unitNr>19</unitNr>
@@ -118,91 +100,30 @@
       <texturesUri>model://pizza_credencials/materials/textures</texturesUri>
       <scriptName>Cheese/Diffuse</scriptName>
       <static>0</static>
-    </plugin>
-
-    <plugin name="SpawnChampignon" filename="libSpawnUnits.so">
-      <modelName>Champignon</modelName>
-      <geometry>cylinder</geometry>
-      <visGeom>mesh</visGeom>
-      <meshUri>model://pizza_credencials/meshes/mushroom.dae</meshUri>
-      <meshScale>1.0</meshScale>
-      <unitNr>10</unitNr>
-      <spawnDiam>0.12</spawnDiam>
-      <onTopOfModel>ChampignonBowl</onTopOfModel>
-      <onTopOffset>0 0 0.06</onTopOffset>
-      <unitMass>0.01</unitMass>
-      <unitSize>0.009</unitSize>
-      <inertiaVect>0.0000005 0.0000005 0.00000005</inertiaVect>
-      <cfm>0.55</cfm>
-      <erp>0.55</erp>
-      <kp>10.8</kp>
-      <kd>100.2</kd>
-      <collideBitmask>0x03</collideBitmask>
-      <static>0</static>
-    </plugin>
+    </plugin> -->
 
     <plugin name="SpawnSauce" filename="libSpawnUnits.so">
       <modelName>Sauce</modelName>
-      <geometry>sphere</geometry>
-      <unitNr>40</unitNr>
+      <geometry>box</geometry>
+      <unitNr>150</unitNr>
       <spawnDiam>0.08</spawnDiam>
-      <onTopOfModel>Cup</onTopOfModel>
-      <onTopOffset>0 0 0.04</onTopOffset>
-      <unitMass>0.01</unitMass>
-      <unitSize>0.005</unitSize>
-      <inertiaVect>0.01 0.01 0.01</inertiaVect>
-      <cfm>0.05</cfm>
-      <erp>0.05</erp>
-      <kp>1000.8</kp>
-      <kd>100000.2</kd>
+      <onTopOfModel>GreenBowl</onTopOfModel>
+      <onTopOffset>0 0 0.06</onTopOffset>
+      <unitMass>0.001</unitMass>
+      <unitSize>0.01</unitSize>
+      <!-- <unitLength>0.005</unitLength> -->
+      <inertiaVect>0.0000001 0.0000001 0.0000001</inertiaVect>
+      <cfm>0.5</cfm>
+      <erp>0.5</erp>
+      <kp>10</kp>
+      <kd>1000</kd>
       <collideBitmask>0x03</collideBitmask>
       <scriptsUri>model://pizza_credencials/materials/scripts</scriptsUri>
       <texturesUri>model://pizza_credencials/materials/textures</texturesUri>
       <scriptName>Sauce/Diffuse</scriptName>
       <static>0</static>
-    </plugin>
 
-<!--    <plugin name="SpawnBacon" filename="libSpawnUnits.so">
-      <modelName>Bacon</modelName>
-      <geometry>cylinder</geometry>
-      <visGeom>mesh</visGeom>
-      <meshUri>model://pizza_credencials/meshes/bacon_cube.dae</meshUri>
-      <meshScale>1.0</meshScale>
-      <unitNr>10</unitNr>
-      <spawnDiam>0.12</spawnDiam>
-      <onTopOfModel>BaconBowl</onTopOfModel>
-      <onTopOffset>0 0 0.06</onTopOffset>
-      <unitMass>0.01</unitMass>
-      <unitSize>0.01</unitSize>
-      <inertiaVect>0.0000005 0.0000005 0.0000005</inertiaVect>
-      <cfm>0.55</cfm>
-      <erp>0.55</erp>
-      <kp>10.8</kp>
-      <kd>100.2</kd>
-      <collideBitmask>0x03</collideBitmask>
-      <static>0</static>
     </plugin>
-
-    <plugin name="SpawnOlive" filename="libSpawnUnits.so">
-      <modelName>Olive</modelName>
-      <geometry>cylinder</geometry>
-      <visGeom>mesh</visGeom>
-      <meshUri>model://pizza_credencials/meshes/olive.dae</meshUri>
-      <meshScale>1.0</meshScale>
-      <unitNr>10</unitNr>
-      <spawnDiam>0.12</spawnDiam>
-      <onTopOfModel>OliveBowl</onTopOfModel>
-      <onTopOffset>0 0 0.06</onTopOffset>
-      <unitMass>0.01</unitMass>
-      <unitSize>0.01</unitSize>
-      <inertiaVect>0.0000005 0.0000005 0.0000005</inertiaVect>
-      <cfm>0.55</cfm>
-      <erp>0.55</erp>
-      <kp>10.8</kp>
-      <kd>100.2</kd>
-      <collideBitmask>0x03</collideBitmask>
-      <static>0</static>
-    </plugin>-->
 
     <!-- Freeze models with the razer hydra -->
     <plugin name="HydraFreezeModels" filename="libHydraFreezeModels.so">

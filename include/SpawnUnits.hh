@@ -66,6 +66,7 @@ class SpawnUnits : public gazebo::WorldPlugin
             const gazebo::math::Vector3 _inertia_vect,
             const double _unit_mass,
             const double _unit_size,
+            const double _unit_length,
             const double _cfm,
             const double _erp,
             const double _kp,

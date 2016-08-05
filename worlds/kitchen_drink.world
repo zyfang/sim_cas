@@ -47,7 +47,7 @@
     </include>
 
     <include>
-      <uri>model://hit_hand</uri>
+      <uri>model://pr2_r_gripper</uri>
       <pose>0 0 1 0 0 0</pose>
     </include>
 
@@ -65,7 +65,9 @@
 	<plugin name="hydra" filename="libHydraPlugin.so"/>
 
 	<!-- Load the plugin for controlling the environment with Razer Hydra -->
-	<plugin name="HydraGameController" filename="libHydraGameController.so"/>
+	<!-- <plugin name="HydraGameController" filename="libHydraGameController.so"/> -->
+
+	<plugin name="HydraPR2RGripper" filename="libHydraPR2RGripper.so"/>
 
 	<!--~HARD bodies cfm=erp=0, kp=kd=1000000000000
 	~SOFT bodies cfm=erp=1 or kp,kd  < 1
