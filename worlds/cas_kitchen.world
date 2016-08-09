@@ -52,12 +52,14 @@
     </include>
 
     <include>
-        <uri>model://mug_exp2/mug16</uri>
+        <uri>model://mug</uri>
         <pose>0.2 0.1 0.855 0.0 0 0</pose>
     </include>
 
     <!-- Plugin for loading models -->
-	<plugin name="ArrangeModels" filename="libArrangeModels.so"/>
+	<plugin name="ArrangeModels" filename="libArrangeModels.so">
+      <config_file>config/arrange_pancake.cfg</config_file>
+    </plugin>
 
 	<!-- Load the plugin for publishing Razer Hydra -->
 	<plugin name="hydra" filename="libHydraPlugin.so"/>
@@ -72,7 +74,7 @@
 		<initPos>0.2 0.1 0.88</initPos>
 		<nrSpheres>150</nrSpheres>
 		<inObject>Cup</inObject>
-		<inObjectZOffset>0.03527766</inObjectZOffset>
+		<inObjectZOffset>0.081105</inObjectZOffset>
 		<mass>0.0006</mass>
 		<sphereRadius>0.0045</sphereRadius>	
 		<spawnDiam>0.05</spawnDiam>

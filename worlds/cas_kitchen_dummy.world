@@ -41,8 +41,9 @@
     </include>
 
     <!-- Plugin for loading models -->
-	<plugin name="ArrangeModels" filename="libArrangeModels.so"/>
-
+	<plugin name="ArrangeModels" filename="libArrangeModels.so">
+      <config_file>config/arrange_pancake.cfg</config_file>
+    </plugin>
 	<!--~HARD bodies cfm=erp=0, kp=kd=1000000000000
 	~SOFT bodies cfm=erp=1 or kp,kd  < 1
 	<inertia> for spheres: (2*m*r^2)/5 -->	

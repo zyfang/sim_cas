@@ -39,11 +39,12 @@
 
     <include>
       <uri>model://table_lab</uri>
+      <pose>0.4 0 0 0 0 0</pose>
     </include>
 
     <include>
-        <uri>model://red_metal_cup</uri>
-        <pose>-0.2 0.4 0.87 0 0 0</pose>
+        <uri>model://eco_cup</uri>
+        <pose>0.3 0.4 0.87 0 0 0</pose>
     </include>
 
     <include>
@@ -52,7 +53,7 @@
     </include>
 
     <include>
-        <uri>model://buttermilk2</uri>
+        <uri>model://sigg_bottle</uri>
         <pose>0 0.1 0.87 0.0 0 0</pose>
     </include>
 
@@ -74,12 +75,12 @@
 	<inertia> for spheres: (2*m*r^2)/5 -->	
 	<plugin name="SpawnLiquid" filename="libSpawnLiquid.so">
 		<initPos>0.2 0.1 0.88</initPos>
-		<nrSpheres>200</nrSpheres>
-		<inObject>Buttermilk</inObject>
-		<inObjectZOffset>0.025</inObjectZOffset>
+		<nrSpheres>150</nrSpheres>
+		<inObject>SiggBottle</inObject>
+		<inObjectZOffset>0.13221</inObjectZOffset>
 		<mass>0.0006</mass>
 		<sphereRadius>0.004</sphereRadius>	
-		<spawnDiam>0.05</spawnDiam>
+		<spawnDiam>0.045</spawnDiam>
 		<inertia>0</inertia>
 		<autoDisable>0</autoDisable>
 		<friction>0</friction>	
