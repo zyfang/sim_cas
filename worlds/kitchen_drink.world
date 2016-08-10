@@ -77,7 +77,7 @@
 		<initPos>0.2 0.1 0.88</initPos>
 		<nrSpheres>150</nrSpheres>
 		<inObject>SiggBottle</inObject>
-		<inObjectZOffset>0.13221</inObjectZOffset>
+		<inObjectZOffset>0.01</inObjectZOffset>
 		<mass>0.0006</mass>
 		<sphereRadius>0.004</sphereRadius>	
 		<spawnDiam>0.045</spawnDiam>
