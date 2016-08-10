@@ -257,7 +257,7 @@ void SpawnLiquid::GetParamAndSpawnLiquid(const sdf::ElementPtr _sdf)
 
 	// Generate liquid sdf
 	sdf::SDF liquidSDF = SpawnLiquid::GenerateLiquidSDF(
-			 init_pos, nr_spheres, sphere_radius, spawn_diam, inertia, mass, auto_disable);
+			 init_pos, nr_spheres, sphere_radius, spawn_diam, inertia, mass, mu, mu2, slip1, slip2, auto_disable);
 
 	// Insert generated sdf into the world
 	this->world->InsertModelSDF(liquidSDF);
@@ -273,6 +273,10 @@ sdf::SDF SpawnLiquid::GenerateLiquidSDF(
 		const double _spawn_diam,
 		const double _inertia,
 		const double _mass,
+		const double _mu,
+		const double _mu2,
+		const double _slip1,
+		const double _slip2,
 		const bool _auto_disable
 		)
 {
@@ -332,20 +336,20 @@ sdf::SDF SpawnLiquid::GenerateLiquidSDF(
 		// xml << "\t\t\t\t\t\t<threshold>10000.0</threshold>\n";
 		// xml << "\t\t\t\t\t</bounce>\n";
 
-		// xml << "\t\t\t\t\t<friction>\n";
-		// xml << "\t\t\t\t\t\t<ode>\n";
-		// xml << "\t\t\t\t\t\t\t<mu>" << mu << "</mu>\n";
-		// xml << "\t\t\t\t\t\t\t<mu2>" << mu2 << "</mu2>\n";
+		sdf_ss << "\t\t\t\t\t<friction>\n";
+		sdf_ss << "\t\t\t\t\t\t<ode>\n";
+		sdf_ss << "\t\t\t\t\t\t\t<mu>" << _mu << "</mu>\n";
+		sdf_ss << "\t\t\t\t\t\t\t<mu2>" << _mu2 << "</mu2>\n";
 		// xml << "\t\t\t\t\t\t\t<fdir1>0.0 0.0 0.0</fdir1>\n";
-		// xml << "\t\t\t\t\t\t\t<slip1>" << slip1 << "</slip1>\n";
-		// xml << "\t\t\t\t\t\t\t<slip2>" << slip2 << "</slip2>\n";
-		// xml << "\t\t\t\t\t\t</ode>\n";
+		sdf_ss << "\t\t\t\t\t\t\t<slip1>" << _slip1 << "</slip1>\n";
+		sdf_ss << "\t\t\t\t\t\t\t<slip2>" << _slip2 << "</slip2>\n";
+		sdf_ss << "\t\t\t\t\t\t</ode>\n";
 		// xml << "\t\t\t\t\t\t<bullet>\n";
 		// xml << "\t\t\t\t\t\t\t<friction>" << friction << "</friction>\n";
 		// xml << "\t\t\t\t\t\t\t<friction2>" << friction2 << "</friction2>\n";
 		// xml << "\t\t\t\t\t\t\t<rolling_friction>" << roll_friction << "</rolling_friction>\n";
 		// xml << "\t\t\t\t\t\t</bullet>\n";
-		// xml << "\t\t\t\t\t</friction>\n";
+		sdf_ss << "\t\t\t\t\t</friction>\n";
 
 		sdf_ss << "\t\t\t\t\t<contact>\n";
 		sdf_ss << "\t\t\t\t\t\t<ode>\n";

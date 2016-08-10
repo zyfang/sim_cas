@@ -86,8 +86,8 @@
 		<friction>0</friction>	
 		<friction2>0</friction2>
 		<roll_friction>0</roll_friction>
-		<mu>0</mu>			
-		<mu2>0</mu2>
+		<mu>0.001</mu>			
+		<mu2>0.001</mu2>
 		<slip1>0</slip1>			
 		<slip2>0</slip2>
 		<cfm>0</cfm>			

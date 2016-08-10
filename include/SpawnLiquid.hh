@@ -67,6 +67,10 @@ namespace sim_games
 				const double _spawn_diam,
 				const double _inertia,
 				const double _mass,
+				const double _mu,
+				const double _mu2,
+				const double _slip1,
+				const double _slip2,
 				const bool _auto_disable
 				);
 
