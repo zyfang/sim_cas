@@ -41,6 +41,8 @@
 #include "gazebo/common/Plugin.hh"
 #include "gazebo/util/LogRecord.hh"
 
+#include <libconfig.h++>
+ 
 namespace sim_games
 {   
 
@@ -181,6 +183,8 @@ class HydraPR2RGripper : public gazebo::ModelPlugin
 
     /// \brief Attached model
     private: gazebo::physics::ModelPtr attachedModel;
+
+    private: std::string logpath ="logs/manual/cmdcall/0";
 
 };
 }

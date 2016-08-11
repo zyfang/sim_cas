@@ -71,8 +71,9 @@
     <plugin name="hydra" filename="libHydraPlugin.so"/>  
 
     <!-- Load the plugin for controlling the environment with Razer Hydra -->
-    <plugin name="HydraGameController" filename="libHydraGameController.so"/> 
-
+    <plugin name="HydraGameController" filename="libHydraGameController.so"> 
+      <config_file>config/log_location.cfg</config_file>
+    </plugin>
         <!-- Plugin for loading models -->
 <!--     <plugin name="ArrangeModels" filename="libArrangeModels.so">
       <config_file>config/arrange_pizza.cfg</config_file>

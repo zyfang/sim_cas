@@ -41,6 +41,8 @@
 #include "gazebo/common/Plugin.hh"
 #include "gazebo/util/LogRecord.hh"
 
+#include <libconfig.h++>
+
 namespace sim_games
 {   
 	/// \brief HydraGameController class, in controls the robot hand using Hydra as input
@@ -170,6 +172,8 @@ namespace sim_games
 
 		/// \brief Timestamp of the last cycle for the PID
 		private: gazebo::common::Time prevSimTime;
+
+		private: std::string logpath ="logs/manual/cmdcall/0";
 
 	};
 }

@@ -18,7 +18,7 @@ add_library(HydraFreezeModels SHARED HydraFreezeModels.cc)
 target_link_libraries(HydraFreezeModels ${GAZEBO_libraries})
 
 add_library(HydraPR2RGripper SHARED HydraPR2RGripper.cc)
-target_link_libraries(HydraPR2RGripper ${GAZEBO_libraries})
+target_link_libraries(HydraPR2RGripper ${GAZEBO_libraries} config++)
 
 
 target_link_libraries(HydraGameController ${GAZEBO_libraries})

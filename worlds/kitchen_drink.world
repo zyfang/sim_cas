@@ -48,6 +48,7 @@
     </include>
 
     <include>
+      <!-- Model includes the PR2 gripper plugin in the sdf definition! -->
       <uri>model://pr2_r_gripper</uri>
       <pose>0 0 1 0 0 0</pose>
     </include>
@@ -59,16 +60,19 @@
 
     <!-- Plugin for loading models -->
 	<plugin name="ArrangeModels" filename="libArrangeModels.so">
-      <config_file>config/arrange_models.cfg</config_file>
+    	<config_file>config/arrange_models.cfg</config_file>
     </plugin>
 
 	<!-- Load the plugin for publishing Razer Hydra -->
 	<plugin name="hydra" filename="libHydraPlugin.so"/>
 
 	<!-- Load the plugin for controlling the environment with Razer Hydra -->
-	<!-- <plugin name="HydraGameController" filename="libHydraGameController.so"/> -->
-
-	<plugin name="HydraPR2RGripper" filename="libHydraPR2RGripper.so"/>
+	<!-- <plugin name="HydraGameController" filename="libHydraGameController.so">
+		<config_file>config/log_location.cfg</config_file>
+    </plugin> -->
+    <plugin name="HydraPR2RGripper" filename="libHydraPR2RGripper.so">
+      <config_file>config/log_location.cfg</config_file>
+    </plugin>
 
 	<!--~HARD bodies cfm=erp=0, kp=kd=1000000000000
 	~SOFT bodies cfm=erp=1 or kp,kd  < 1

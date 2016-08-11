@@ -37,6 +37,7 @@
 #include "HydraGameController.hh"
 #include <boost/tokenizer.hpp>
 #include <gazebo/transport/transport.hh>
+#include "GzUtils.hh"
 
 #define PI 3.14159265359
 
@@ -61,6 +62,39 @@ HydraGameController::~HydraGameController()
 //////////////////////////////////////////////////
 void HydraGameController::Load(physics::WorldPtr _parent, sdf::ElementPtr _sdf)
 {
+
+    // create the config
+    libconfig::Config cfg;  
+    
+    // get the config file path, default log_location.cfg
+    const std::string config_file =
+            GetSDFValue(std::string("config_file"), _sdf, std::string("config/log_location.cfg"));
+    
+    // read config file
+    try
+    {
+        cfg.readFile(config_file.c_str());
+    }
+    catch(const libconfig::FileIOException &fioex)
+    {
+        std::cerr << "I/O error while reading file. " << config_file.c_str() << std::endl;
+    }
+    catch(const libconfig::ParseException &pex)
+    {
+        std::cerr << "Parse error at " << pex.getFile() << ":" << pex.getLine()
+                                << " - " << pex.getError() << std::endl;
+    }
+	// get top folder name
+    std::string topfolder = cfg.lookup("logfolder.log");
+    // get the exp ID
+    std::string expID = cfg.lookup("logfolder.exp");
+    // get the subject ID
+    std::string subjID = cfg.lookup("logfolder.subject");
+    // get the demonstration ID
+    std::string demoID = cfg.lookup("logfolder.isim");
+    // put logpath together
+    this->logpath = topfolder + "/" + expID + "/" + subjID + "/" + demoID;
+
 	// Get the world name.
 	this->world = _parent;
 
@@ -363,7 +397,7 @@ void HydraGameController::ToggleLogging(const bool _btn)
 			std::cout << "Starting logging.." << std::endl;
 
 			// set the folder where to save the logs
-			util::LogRecord::Instance()->SetBasePath("logs");
+			util::LogRecord::Instance()->SetBasePath(this->logpath);
 
 			// start recording with given compression type
 			util::LogRecord::Instance()->Start("txt"); // txt, bz2, zlib
