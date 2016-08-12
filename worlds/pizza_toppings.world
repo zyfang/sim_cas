@@ -72,7 +72,10 @@
 
     <!-- Load the plugin for controlling the environment with Razer Hydra -->
     <plugin name="HydraGameController" filename="libHydraGameController.so"> 
-      <config_file>config/log_location.cfg</config_file>
+      <top_folder>logs2</top_folder>
+      <exp_id>exp_test</exp_id>
+      <subj_id>subj_test</subj_id>
+      <demo_id>0</demo_id>
     </plugin>
         <!-- Plugin for loading models -->
 <!--     <plugin name="ArrangeModels" filename="libArrangeModels.so">
@@ -127,11 +130,11 @@
     </plugin>
 
     <!-- Freeze models with the razer hydra -->
-    <plugin name="HydraFreezeModels" filename="libHydraFreezeModels.so">
+    <!-- <plugin name="HydraFreezeModels" filename="libHydraFreezeModels.so">
       <model>Sauce</model>
       <model>Cheese</model>
       <model>Champignon</model>
     </plugin>
-
+ -->
     </world>
 </sdf>

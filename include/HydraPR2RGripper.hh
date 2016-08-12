@@ -47,7 +47,7 @@ namespace sim_games
 {   
 
 /// \brief HydraPR2RGripper class
-class HydraPR2RGripper : public gazebo::ModelPlugin
+class HydraPR2RGripper : public gazebo::WorldPlugin
 {
     /// \brief Constructor
     public: HydraPR2RGripper();
@@ -56,7 +56,7 @@ class HydraPR2RGripper : public gazebo::ModelPlugin
     public: virtual ~HydraPR2RGripper();
 
     /// \brief Load plugin
-    protected: virtual void Load(gazebo::physics::ModelPtr _parent, sdf::ElementPtr _sdf);
+    protected: virtual void Load(gazebo::physics::WorldPtr _parent, sdf::ElementPtr _sdf);
 
     /// \brief Update callback function called on every world update event
     protected: virtual void OnUpdate();
@@ -184,7 +184,11 @@ class HydraPR2RGripper : public gazebo::ModelPlugin
     /// \brief Attached model
     private: gazebo::physics::ModelPtr attachedModel;
 
-    private: std::string logpath ="logs/manual/cmdcall/0";
+    //bunch of parameters to save logs to a more readable path
+    private: std::string log_topfolder ="logs";
+    private: std::string log_expid ="exp_test";
+    private: std::string log_subjid ="subj_test";
+    private: std::string log_isim ="0";
 
 };
 }

@@ -45,7 +45,7 @@ using namespace sim_games;
 using namespace gazebo;
 
 // Register this plugin with the simulator
-GZ_REGISTER_MODEL_PLUGIN(HydraPR2RGripper)
+GZ_REGISTER_WORLD_PLUGIN(HydraPR2RGripper)
 
 
 //////////////////////////////////////////////////
@@ -89,49 +89,46 @@ HydraPR2RGripper::~HydraPR2RGripper()
 }
 
 //////////////////////////////////////////////////
-void HydraPR2RGripper::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf)
+void HydraPR2RGripper::Load(physics::WorldPtr _parent, sdf::ElementPtr _sdf)
 {
-    // create the config
-    libconfig::Config cfg;  
-    // get the config file path, default log_location.cfg
-    const std::string config_file =
-            GetSDFValue(std::string("config_file"), _sdf, std::string("config/log_location.cfg"));
 
-    // read config file
-    try
+    if (_sdf->HasElement("top_folder"))
     {
-        cfg.readFile(config_file.c_str());
+        this->log_topfolder=_sdf->Get<std::string>("top_folder");
     }
-    catch(const libconfig::FileIOException &fioex)
+    else std::cout << "Missing parameter <top_folder> in HydraPR2Gripper, using default" << std::endl;
+    
+    if (_sdf->HasElement("exp_id"))
     {
-        std::cerr << "I/O error while reading file. " << config_file.c_str() << std::endl;
+        this->log_expid=_sdf->Get<std::string>("exp_id");
     }
-    catch(const libconfig::ParseException &pex)
+    else std::cout << "Missing parameter <exp_id> in HydraPR2Gripper, using default" << std::endl;
+
+    if (_sdf->HasElement("subj_id"))
     {
-        std::cerr << "Parse error at " << pex.getFile() << ":" << pex.getLine()
-                                << " - " << pex.getError() << std::endl;
+        this->log_subjid=_sdf->Get<std::string>("subj_id");
     }
-    // get top folder name
-    std::string topfolder = cfg.lookup("logfolder.log");
-    // get the exp ID
-    std::string expID = cfg.lookup("logfolder.exp");
-    // get the subject ID
-    std::string subjID = cfg.lookup("logfolder.subject");
-    // get the demonstration ID
-    std::string demoID = cfg.lookup("logfolder.isim");
-    // put logpath together
-    this->logpath = topfolder + "/" + expID + "/" + subjID + "/" + demoID;
+    else std::cout << "Missing parameter <subj_id> in HydraPR2Gripper, using default" << std::endl;
+
+    if (_sdf->HasElement("demo_id"))
+    {
+        this->log_isim=_sdf->Get<std::string>("demo_id");
+    }
+    else std::cout << "Missing parameter <demo_id> in HydraPR2Gripper, using default" << std::endl;
     
     ///////////////////////////////////////////////////////////
     // Store the pointer to the model
-    this->gripperModel = _parent;
+    // this->gripperModel = _parent;
+
+    // initialize world
+    this->world = _parent;
+
+    // Get the model to be controlled by hydra
+    this->gripperModel = this->world->GetModel("PR2RGripper");
 
     // disable gravity on the hand model
     this->gripperModel->SetGravityMode(false);
-
-    // initialize world
-    this->world = this->gripperModel->GetWorld();
-
+    
     // get hand joint controller (in case of position control)
     this->jointController = this->gripperModel->GetJointController();
 
@@ -497,10 +494,12 @@ void HydraPR2RGripper::ToggleLogging(const bool _btn)
     {
         if (!this->loggingOn)
         {
-            std::cout << "Starting logging.." << std::endl;
-
             // set the folder where to save the logs
-            util::LogRecord::Instance()->SetBasePath(this->logpath);
+            std::string logpath = this->log_topfolder + "/" + this->log_expid + "/" + this->log_subjid + "/" + this->log_isim;
+
+            std::cout << "Starting logging to " + logpath << std::endl;
+
+            util::LogRecord::Instance()->SetBasePath(logpath);
 
             // start recording with given compression type
             util::LogRecord::Instance()->Start("txt"); // txt, bz2, zlib

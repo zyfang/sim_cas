@@ -173,7 +173,11 @@ namespace sim_games
 		/// \brief Timestamp of the last cycle for the PID
 		private: gazebo::common::Time prevSimTime;
 
-		private: std::string logpath ="logs/manual/cmdcall/0";
+		//bunch of parameters to save logs to a more readable path
+	    private: std::string log_topfolder ="logs";
+	    private: std::string log_expid ="exp_test";
+	    private: std::string log_subjid ="subj_test";
+	    private: std::string log_isim ="0";
 
 	};
 }
