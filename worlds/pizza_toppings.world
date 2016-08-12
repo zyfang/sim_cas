@@ -72,10 +72,10 @@
 
     <!-- Load the plugin for controlling the environment with Razer Hydra -->
     <plugin name="HydraGameController" filename="libHydraGameController.so"> 
-      <top_folder>logs2</top_folder>
-      <exp_id>exp_test</exp_id>
-      <subj_id>subj_test</subj_id>
-      <demo_id>0</demo_id>
+      <top_folder>logs_toppings</top_folder>
+      <exp_id>test</exp_id>
+      <subj_id>A_a</subj_id>
+      <demo_id>0_0</demo_id>
     </plugin>
         <!-- Plugin for loading models -->
 <!--     <plugin name="ArrangeModels" filename="libArrangeModels.so">
@@ -113,8 +113,8 @@
       <spawnDiam>0.08</spawnDiam>
       <onTopOfModel>GreenBowl</onTopOfModel>
       <onTopOffset>0 0 0.06</onTopOffset>
-      <unitMass>0.001</unitMass>
-      <unitSize>0.01</unitSize>
+      <unitMass>0.002</unitMass>
+      <unitSize>0.009</unitSize>
       <!-- <unitLength>0.005</unitLength> -->
       <inertiaVect>0.0000001 0.0000001 0.0000001</inertiaVect>
       <cfm>0.5</cfm>

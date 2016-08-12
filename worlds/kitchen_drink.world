@@ -72,8 +72,8 @@
     </plugin> -->
     <plugin name="HydraPR2RGripper" filename="libHydraPR2RGripper.so">
     	<top_folder>logs_drink</top_folder>
-    	<exp_id>test2</exp_id>
-    	<subj_id>A_a</subj_id>
+    	<exp_id>robohow1</exp_id>
+    	<subj_id>A_yf1</subj_id>
     	<demo_id>0_-2</demo_id>
     </plugin>
 
@@ -82,12 +82,12 @@
 	<inertia> for spheres: (2*m*r^2)/5 -->	
 	<plugin name="SpawnLiquid" filename="libSpawnLiquid.so">
 		<initPos>0.2 0.1 0.88</initPos>
-		<nrSpheres>150</nrSpheres>
+		<nrSpheres>106</nrSpheres>
 		<inObject>SiggBottle</inObject>
 		<inObjectZOffset>0.01</inObjectZOffset>
 		<mass>0.0006</mass>
-		<sphereRadius>0.004</sphereRadius>	
-		<spawnDiam>0.045</spawnDiam>
+		<sphereRadius>0.0045</sphereRadius>	
+		<spawnDiam>0.05</spawnDiam>
 		<inertia>0</inertia>
 		<autoDisable>0</autoDisable>
 		<friction>0</friction>	
