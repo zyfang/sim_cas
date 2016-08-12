@@ -71,10 +71,10 @@
 		<config_file>config/log_location.cfg</config_file>
     </plugin> -->
     <plugin name="HydraPR2RGripper" filename="libHydraPR2RGripper.so">
-    	<top_folder>logs2</top_folder>
-    	<exp_id>exp_test</exp_id>
-    	<subj_id>subj_test</subj_id>
-    	<demo_id>0</demo_id>
+    	<top_folder>logs_drink</top_folder>
+    	<exp_id>test2</exp_id>
+    	<subj_id>A_a</subj_id>
+    	<demo_id>0_-2</demo_id>
     </plugin>
 
 	<!--~HARD bodies cfm=erp=0, kp=kd=1000000000000
