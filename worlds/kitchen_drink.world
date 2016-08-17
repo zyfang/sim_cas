@@ -39,7 +39,7 @@
 
     <include>
       <uri>model://table_lab</uri>
-      <pose>0.4 0 0 0 0 0</pose>
+      <pose>0.4 0 0 0 0 1.5708</pose>
     </include>
 
     <include>
@@ -72,9 +72,9 @@
     </plugin> -->
     <plugin name="HydraPR2RGripper" filename="libHydraPR2RGripper.so">
     	<top_folder>logs_drink</top_folder>
-    	<exp_id>robohow1</exp_id>
+    	<exp_id>yf_test</exp_id>
     	<subj_id>A_yf1</subj_id>
-    	<demo_id>0_-2</demo_id>
+    	<demo_id>prac</demo_id>
     </plugin>
 
 	<!--~HARD bodies cfm=erp=0, kp=kd=1000000000000
